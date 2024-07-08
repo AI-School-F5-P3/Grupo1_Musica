@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(layout="wide")
 
-opciones = ["Registrar nuevo alumno", "Consultas BBDD"]
+opciones = ["Registrar nuevo alumno", "Consultas BBDD", "Editar precios"]
 st.sidebar.header("Menu")
 seleccion = st.sidebar.selectbox("Navegación", opciones)
 
@@ -49,3 +49,8 @@ if seleccion == "Registrar nuevo alumno":
 
 if seleccion == "Consultas BBDD":
     st.markdown("# En construcción")
+
+
+if seleccion == "Editar precios":
+    st.markdown("# En construcción")
+    
