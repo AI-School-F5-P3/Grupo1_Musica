@@ -1,11 +1,10 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from .database import Base
 
 
-class Alumno(base):
+class Alumno(Base):
     __tablename__ = 'alumno'
-
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, index=True)
@@ -24,7 +23,8 @@ class ClasePorAlumno(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     instrumento_nivel = Column(Integer, ForeignKey("instrumento_nivel.id"))
-    profesor_instrumento = Column(Integer, ForeignKey("profesor_ionstrumento.id"))
+    profesor_instrumento = Column(Integer,
+                                  ForeignKey("profesor_ionstrumento.id"))
     alumno_id = Column(Integer, ForeignKey("alumno.id"))
 
     alumno = relationship("Alumno", back_populates="clases")

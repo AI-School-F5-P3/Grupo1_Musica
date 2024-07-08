@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .. import crud, schemas
-from ..database import SessionLocal
+from .database import SessionLocal
 
 router = APIRouter
 
@@ -14,7 +14,7 @@ def get_db():
         db.close()
 
 
-@router.port("/alumnos/", reponse_model=schemas.Alumno)
+@router.post("/alumnos/", reponse_model=schemas.Alumno)
 def create_alumno(alumno: schemas.AlumnoCreate, db: Session = Depends(get_db)):
     return crud.create_alumno(db=db, alumno=alumno)
 
