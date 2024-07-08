@@ -1,8 +1,30 @@
 import streamlit as st
 
-opciones = ["Registrar nuevo alumno", "Consultas BBDD"]
-seleccion = st.sidebar.selectbox("Menu", opciones)
+st.set_page_config(layout="wide")
 
+opciones = ["Registrar nuevo alumno", "Consultas BBDD"]
+st.sidebar.header("Menu")
+seleccion = st.sidebar.selectbox("Navegación", opciones)
+
+# Custom HTML/CSS for the banner
+custom_html = """
+<div class="banner">
+    <img src="https://www.mtgpics.com/pics/art/sld/605.jpg" alt="Banner Image" height = 500 width = 1000>
+</div>
+<style>
+    .banner {
+        width: 100%;
+        height: 700px;
+        overflow: hidden;
+    }
+    .banner img {
+        width: 100%;
+        object-fit: cover;
+    }
+</style>
+"""
+# Display the custom HTML
+st.components.v1.html(custom_html)
 if seleccion == "Registrar nuevo alumno":
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
