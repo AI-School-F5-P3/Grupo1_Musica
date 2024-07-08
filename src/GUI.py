@@ -47,10 +47,29 @@ if seleccion == "Registrar nuevo alumno":
 
     familiy = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
 
-if seleccion == "Consultas BBDD":
-    st.markdown("# En construcción")
+    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
 
+    nivel = st.selectbox("Nivel: ", options = ["Cero", "Inicio", "Medio", "Avanzado", "No aplica"])
+
+    enviar = st.button("Registrar", type = "primary")
+
+if seleccion == "Consultas BBDD":
+    computer = "\U0001f4bb"
+    st.markdown(f"""<h1 style="text-align: center;"> {computer} Consulta base de datos {computer} </h1>""", unsafe_allow_html=True)
+
+    name = st.text_input("Nombre del alumno")
+
+    surname = st.text_input("Apellidos")
+    
+    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+
+    nivel = st.selectbox("Nivel: ", options = ["Cero", "Inicio", "Medio", "Avanzado", "No aplica"])
+
+    enviar = st.button("Consultar", type = "primary")
 
 if seleccion == "Editar precios":
-    st.markdown("# En construcción")
-    
+    money = "\U0001f4b0"
+    st.markdown(f"""<h1 style="text-align: center;"> {money} Modificar precios {money} </h1>""", unsafe_allow_html=True)
+    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+    precio = st.number_input(label = "Precio de la clase", value = 0.00 , min_value = 0.00, step = 0.01)
+    enviar = st.button("Editar", type = "primary")
