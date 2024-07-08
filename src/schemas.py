@@ -84,4 +84,36 @@ class InstrumentoNivel(InstrumentoNivelBase):
     id: int
 
     class Config:
-        orm_mode
+        orm_mode = True
+
+
+class ProfesorInstrumentoBase(BaseModel):
+    profesor_id: int
+    instrumento_id: int
+
+
+class ProfesorInstrumentoCreate(ProfesorInstrumentoBase):
+    pass
+
+
+class ProfesorInstrumento(ProfesorInstrumentoBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class PackBase(BaseModel):
+    pack: str
+    precio: int
+
+
+class PackCreate(PackBase):
+    pass
+
+
+class Pack(PackBase):
+    id: int
+
+    class Config:
+        orm_mode = True
