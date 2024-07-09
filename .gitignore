@@ -8,6 +8,7 @@ logs/*.log
 *.pyo
 # Ignorar entornos virtuales
 venv/
+.venv/
 # Ignorar archivos y carpetas específicas de IDEs
 .vscode/
 .idea/
