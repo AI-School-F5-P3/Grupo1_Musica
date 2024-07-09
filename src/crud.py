@@ -1,5 +1,6 @@
+import models
+import schemas
 from sqlalchemy.orm import Session
-from . import models, schemas
 
 
 def get_alumno(db: Session, alumno_id: int):
@@ -23,7 +24,7 @@ def get_alumno_clases(db: Session, alumno_id: int):
                     ClasePorAlumno).filter(models.ClasePorAlumno.alumno_id == alumno_id).all()
 
 
-def clacular_precio_alumno(db: Session, alumno_id: int):
+def calcular_precio_alumno(db: Session, alumno_id: int):
     clases = get_alumno_clases(db, alumno_id)
     total = 0
     for clase in clases:

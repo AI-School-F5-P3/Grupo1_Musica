@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from .database import Base
+from database import Base
 
 
 class Alumno(Base):
@@ -49,21 +49,21 @@ class Profesor(Base):
     __tblename__ = 'profesor'
 
     id = Column(Integer, primary_key=True, index=True)
-    Profesor = Column(String, index=True)
+    profesor = Column(String, index=True)
 
 
 class InstrumentoNivel(Base):
     __tablename__ = 'instrumento_nivel'
 
-    id = Column(Integer, ForeignKey=True, index=True)
-    intrumento_id = Column(Integer, ForeignKey("instrumento.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    instrumento_id = Column(Integer, ForeignKey("instrumento.id"))
     nivel_id = Column(Integer, ForeignKey("nivel.id"))
 
 
 class ProfesorInstrumento(Base):
     __tablename__ = 'profesor_instrumento'
 
-    id = Column(Integer, ForeignKey=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     profesor_id = Column(Integer, ForeignKey("profesor.id"))
     instrumento_id = Column(Integer, ForeignKey("instrumento.id"))
 

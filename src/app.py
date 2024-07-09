@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from .routers import router
+from routers import router
 import uvicorn
 
 app = FastAPI()
 
-app.include_router(router.router, prefi="/api/vi", tags=["alumnos"])
+app.include_router(router.router, prefix="/api/vi", tags=["alumnos"])
 
 
 @app.get("/")
