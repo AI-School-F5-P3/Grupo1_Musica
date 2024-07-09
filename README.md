@@ -32,7 +32,7 @@ Cargar las variables de entorno desde el archivo .env:
 
 Ejecutar el script
 
- psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Users\maria\MROSA\BOOTCAMP IA\Proyectos\proyecto_5\Grupo1_Musica\db\init.sql"
+    psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Users\maria\MROSA\BOOTCAMP IA\Proyectos\proyecto_5\Grupo1_Musica\db\init.sql"
 
  Debemos asegurarnos de haber intruducido esta linea al path en variables de entorno:
  
