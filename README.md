@@ -1,13 +1,14 @@
-# Grupo1_Musica
+# Escuela de música Armonía
 
-## Introducción
+### Introducción
+
+...
 
 ### 1. Instalación
 
-# Instalación de la base de datos
+Clonamos el repositorio
 
-
-    git clone https://github.com/AI-School-F5-P3/4_taxis.git
+    git clone https://github.com/AI-School-F5-P3/Grupo1_Musica.git
 
 Navegamos hasta el directorio principal y creamos un entorno virtual
     
