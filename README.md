@@ -48,10 +48,6 @@ Activar el entorno virtual:
 
     source venv/bin/activate
 
-Activar el entorno virtual:
-
-    source venv/bin/activate
-
 Configurar las variables de entorno en el archivo .env en el directorio raíz del proyecto (Grupo1_Musica):
 
     DB_USER=tu_usuario
