@@ -49,13 +49,13 @@ Puede producirse un error de que no tenemos permiso para ejecutar scripts desde 
 
     Set-ExecutionPolicy Unrestricted
 
-Una vez se han cargado las variables de entorno, generamos la base de datos con el comando:
+<!-- Una vez se han cargado las variables de entorno, generamos la base de datos con el comando:
 
     createdb -U postgres -W armonia
 
 Y a continuación ejecutar el script
 
-    psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Documentos\Grupo1_Musica\db\init.sql"
+    psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Documentos\Grupo1_Musica\db\init.sql" -->
 
 IMPORTANTE
 
