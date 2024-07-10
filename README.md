@@ -6,6 +6,8 @@
 
 ### 1. Instalación
 
+### Windows
+
 Clonamos el repositorio
 
     git clone https://github.com/AI-School-F5-P3/Grupo1_Musica.git
