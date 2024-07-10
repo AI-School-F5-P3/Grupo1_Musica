@@ -21,6 +21,10 @@ Lo activamos
 
     .venv\Scripts\activate
 
+Ejecutamos el siguiente comando para descargar las dependencias
+
+    uv pip install -r requirements.txt   
+
 Configurar las variables de entorno en el archivo .env en el directorio raíz del proyecto (Grupo1_Musica):
 
     DATABASE_URL=postgres://tu_usuario:tu_contraseña@localhost/nombre_basedatos
@@ -57,6 +61,10 @@ Navegamos hasta el directorio principal y creamos un entorno virtual
 Activar el entorno virtual:
 
     source venv/bin/activate
+
+Ejecutamos el siguiente comando para descargar las dependencias
+
+    pip install -r requirements.txt   
 
 Configurar las variables de entorno en el archivo .env en el directorio raíz del proyecto (Grupo1_Musica):
 
