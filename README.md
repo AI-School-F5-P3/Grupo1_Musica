@@ -34,7 +34,28 @@ Ejecutar el script
 
     psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Users\maria\MROSA\BOOTCAMP IA\Proyectos\proyecto_5\Grupo1_Musica\db\init.sql"
 
- Debemos asegurarnos de haber intruducido esta linea al path en variables de entorno:
- 
-    C:\Program Files\PostgreSQL\16\bin
+### macOS/Linux
 
+Instalacion para sistemas operativos macOS/linux
+
+    ```bash
+    cd Grupo1_Musica
+    python3 -m venv venv
+
+Activar el entorno virtual:
+
+    source venv/bin/activate
+
+Activar el entorno virtual:
+
+    source venv/bin/activate
+
+Configurar las variables de entorno en el archivo .env en el directorio raíz del proyecto (Grupo1_Musica):
+
+    DB_USER=tu_usuario
+    DB_PASSWORD=tu_contraseña
+    DB_NAME=nombre_basedatos
+
+Ejecutar el script SQL:
+
+    psql -U $DB_USER -d $DB_NAME -f db/init.sql
