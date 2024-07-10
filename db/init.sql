@@ -1,22 +1,33 @@
--- Eliminar la base de datos si existe previamente
-DROP DATABASE IF EXISTS armonia;
+\encoding UTF8
 
--- Crear la base de datos con el nombre 'armonia'
-CREATE DATABASE armonia
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'es_ES.UTF-8'
-    LC_CTYPE = 'es_ES.UTF-8'
-    TEMPLATE = template0
-    CONNECTION LIMIT = -1;
+\c postgres
 
--- Agregar un comentario sobre la base de datos
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = 'armonia' AND pid <> pg_backend_pid();
+
+-- Conectarse a la base de datos
+\c armonia
+
 COMMENT ON DATABASE armonia
     IS 'Base de datos para la escuela de música Armonía';
 
--- Conexión a la base de datos creada
-\c armonia;
+DROP TABLE IF EXISTS pack CASCADE;
+DROP TABLE IF EXISTS instrumento CASCADE;
+DROP TABLE IF EXISTS nivel CASCADE;
+DROP TABLE IF EXISTS profesor CASCADE;
+DROP TABLE IF EXISTS instrumento_nivel CASCADE;
+DROP TABLE IF EXISTS profesor_instrumento CASCADE;
+DROP TABLE IF EXISTS alumno CASCADE;
+DROP TABLE IF EXISTS clase CASCADE;
+DROP TABLE IF EXISTS descuento CASCADE;
+DROP TABLE IF EXISTS inscripcion CASCADE;
+
+
+COMMENT ON DATABASE armonia
+    IS 'Base de datos para la escuela de música Armonía';
+
+SET client_encoding TO 'UTF8';
 
 -- Crear la tabla pack
 CREATE TABLE "pack" (
@@ -175,14 +186,16 @@ COMMENT ON COLUMN "inscripcion"."descuento_id" IS 'Descuento aplicado a la inscr
 
 
 -- Insertar datos en la tabla pack
-INSERT INTO "pack" ("pack", "precio") VALUES
+INSERT INTO pack (pack, precio)
+VALUES 
 ('Canto, Percusión', 40),
 ('Piano, Guitarra, Batería y Flauta', 35),
 ('Violín y Bajo', 40),
 ('Clarinete y Saxofón', 40);
 
 -- Insertar datos en la tabla instrumento
-INSERT INTO "instrumento" ("instrumento", "pack_id") VALUES
+INSERT INTO instrumento (instrumento, pack_id)
+VALUES 
 ('Piano', 2),
 ('Guitarra', 2),
 ('Batería', 2),
@@ -195,21 +208,14 @@ INSERT INTO "instrumento" ("instrumento", "pack_id") VALUES
 ('Bajo', 3);
 
 -- Insertar datos en la tabla nivel
-INSERT INTO "nivel" ("nivel") VALUES
-('Cero'), 
-('Iniciación'), 
-('Medio'), 
-('Avanzado');
+INSERT INTO nivel (nivel)
+VALUES 
+('Cero'), ('Iniciación'), ('Medio'), ('Avanzado');
 
--- Insertar datos en la tabla profesor
-INSERT INTO "profesor" ("profesor") VALUES
-('Mar'), 
-('Flor'), 
-('Álvaro'), 
-('Marifé'), 
-('Nayara'), 
-('Nieves'), 
-('Sofía');
+INSERT INTO profesor (profesor)
+VALUES 
+('Mar'), ('Flor'), ('Álvaro'), ('Marifé'), ('Nayara'), ('Nieves'), ('Sofía');
+
 
 -- Insertar Relaciones entre Profesores e Instrumentos
 -- Relaciones para Piano
@@ -276,19 +282,20 @@ SELECT instrumento_nivel.id, profesor_instrumento.id
 FROM instrumento_nivel
 JOIN profesor_instrumento ON instrumento_nivel.instrumento_id = profesor_instrumento.instrumento_id;
 
--- Insertar datos en la tabla descuento
-INSERT INTO "descuento" ("descripcion", "porcentaje") VALUES
+-- Insertar descuentos
+
+INSERT INTO descuento (descripcion, porcentaje) VALUES
 ('Familiar en la escuela', 10),
-('Segundo curso del mismo pack', 50),
-('Tercer curso del mismo pack', 75),
+('Segundo curso del mismo instrumento', 50),
+('Tercer curso del mismo instrumento', 25),
 ('Sin descuento', 0);
 
--- Insertar datos en la tabla alumno
-INSERT INTO "alumno" ("nombre", "apellido", "edad", "telefono", "correo", "familiar", "total_mes")
+--- Insertar datos en la tabla alumno
+INSERT INTO alumno (nombre, apellido, edad, telefono, correo, familiar,total_mes)
 VALUES
-('Carlos', 'García', 25, '123456789', 'carlos@email.com', TRUE, 0),
-('Ana', 'Martínez', 30, '987654321', 'ana@email.com', FALSE, 0),
-('Juan', 'López', 20, '567890123', 'juan@email.com', FALSE, 0);
+('Carlos', 'García', 25, '123456789', 'carlos@email.com', true, 0),
+('Ana', 'Martínez', 30, '987654321', 'ana@email.com', false, 0),
+('Juan', 'López', 20, '567890123', 'juan@email.com', false, 0);
 
 -- Inscripción de los alumnos en las clases específicas
 
@@ -323,8 +330,7 @@ VALUES (
 );
 
 
-
--- Comprobar que se hayan insertado los datos correctamente
+-- ----------------------------- Comprobar que se hayan insertado los datos correctamente ----------------------------- --
 SELECT * FROM pack;
 SELECT * FROM instrumento;
 SELECT * FROM nivel;
