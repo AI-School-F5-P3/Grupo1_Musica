@@ -3,10 +3,10 @@
 -- \c postgres
 
 -- Eliminar la base de datos si existe
-DROP DATABASE IF EXISTS lolo;
+DROP DATABASE IF EXISTS armonia;
 
 -- Creación de la base de datos con template0
-CREATE DATABASE lolo
+CREATE DATABASE armonia
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'
@@ -15,11 +15,11 @@ CREATE DATABASE lolo
     TEMPLATE = template0
     CONNECTION LIMIT = -1;
 
-COMMENT ON DATABASE lolo
+COMMENT ON DATABASE armonia
     IS 'Base de datos para la escuela de música Armonía';
 
 -- Conectarse a la base de datos
-\c lolo
+\c armonia
 
 -- Creación de la tabla pack
 CREATE TABLE IF NOT EXISTS pack (
