@@ -42,6 +42,7 @@ Para cargar las variables de entorno desde el archivo load_env.ps1:
 En powershell de windows abrir la carpeta config:
 
     cd "C:\Documentos\Grupo1_Musica\config
+    
     .\load_env.ps1
 
 Puede producirse un error de que no tenemos permiso para ejecutar scripts desde powershell, si se quiere modificar ejecutar el comando (Decisión personal):
@@ -58,7 +59,7 @@ Y a continuación ejecutar el script
 
 IMPORTANTE
 
-Recordad actualizar las rutas de los archivos a las que se corresponan en vuestros ordenadores personales.
+Recordad actualizar las rutas de los archivos a las que se correspondan en vuestros ordenadores personales.
 
 ### macOS/Linux
 
