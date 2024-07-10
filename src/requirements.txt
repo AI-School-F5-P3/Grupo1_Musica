@@ -1,6 +1,0 @@
-fastapi
-sqlalchemy
-flask
-uvicorn
-pymysql 
-python-dotenv
