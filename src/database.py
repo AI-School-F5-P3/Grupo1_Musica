@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from ..config.config import database_url
 
-from ..config.config import database_url  # Importa la URL desde config.py
 
 SQLALCHEMY_DATABASE_URL = database_url
 
