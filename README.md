@@ -35,20 +35,30 @@ Configurar las variables de entorno en el archivo .env en el directorio raíz de
     SECRET_KEY=password_server
     DEBUG=true
 
-Cargar las variables de entorno desde el archivo .env:
+En estas variables de entorno debemos especificar el nombre de usuario que tengamos en postgreSQL y la contraseña, además del nombre de la base de datos, que en nuestro caso hemos optado por llamar "Armonia" pero que también es modificable.
 
-    $envFilePath = ".env"
-    Get-Content $envFilePath | ForEach-Object {
-        if ($_ -notmatch '^\s*#' -and $_ -match '^\s*(\w+)\s*=\s*(.*)\s*$') {
-            $name = $matches[1]
-            $value = $matches[2]
-            [System.Environment]::SetEnvironmentVariable($name, $value)
-        }
-    }
+Para cargar las variables de entorno desde el archivo load_env.ps1:
 
-Ejecutar el script
+En powershell de windows abrir la carpeta config:
 
-    psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Users\maria\MROSA\BOOTCAMP IA\Proyectos\proyecto_5\Grupo1_Musica\db\init.sql"
+    cd "C:\Documentos\Grupo1_Musica\config
+    .\load_env.ps1
+
+Puede producirse un error de que no tenemos permiso para ejecutar scripts desde powershell, si se quiere modificar ejecutar el comando (Decisión personal):
+
+    Set-ExecutionPolicy Unrestricted
+
+Una vez se han cargado las variables de entorno, generamos la base de datos con el comando:
+
+    createdb -U postgres -W armonia
+
+Y a continuación ejecutar el script
+
+    psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Documentos\Grupo1_Musica\db\init.sql"
+
+IMPORTANTE
+
+Recordad actualizar las rutas de los archivos a las que se corresponan en vuestros ordenadores personales.
 
 ### macOS/Linux
 
