@@ -1,16 +1,13 @@
 \encoding UTF8
 
-SELECT 'Creating database armonia' AS message
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'armonia');
+\c postgres
 
--- Crear la base de datos solo si no existe
-DO $$ BEGIN
-    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'armonia') THEN
-        CREATE DATABASE armonia;
-    END IF;
-END $$;
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = 'armonia' AND pid <> pg_backend_pid();
 
-\c armonia;
+-- Conectarse a la base de datos
+\c armonia
 
 COMMENT ON DATABASE armonia
     IS 'Base de datos para la escuela de música Armonía';
@@ -26,6 +23,9 @@ DROP TABLE IF EXISTS clase CASCADE;
 DROP TABLE IF EXISTS descuento CASCADE;
 DROP TABLE IF EXISTS inscripcion CASCADE;
 
+
+COMMENT ON DATABASE armonia
+    IS 'Base de datos para la escuela de música Armonía';
 
 SET client_encoding TO 'UTF8';
 
