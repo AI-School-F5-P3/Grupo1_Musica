@@ -341,3 +341,26 @@ SELECT * FROM alumno;
 SELECT * FROM clase;
 SELECT * FROM descuento;
 SELECT * FROM inscripcion;
+
+-- Crear la vista vista_alumnos_por_clase
+CREATE OR REPLACE VIEW vista_alumnos_por_clase AS
+SELECT 
+    CONCAT(i.instrumento, ' - ', n.nivel) AS clase,
+    p.profesor,
+    COUNT(ins.alumno_id) AS cantidad_alumnos,
+    STRING_AGG(a.nombre, ', ') AS nombres_alumnos
+FROM clase c
+JOIN instrumento_nivel inl ON c.instrumento_nivel_id = inl.id
+JOIN instrumento i ON inl.instrumento_id = i.id
+JOIN nivel n ON inl.nivel_id = n.id
+JOIN profesor_instrumento pi ON c.profesor_instrumento_id = pi.id
+JOIN profesor p ON pi.profesor_id = p.id
+LEFT JOIN inscripcion ins ON c.id = ins.clase_id
+LEFT JOIN alumno a ON ins.alumno_id = a.id
+GROUP BY i.instrumento, n.nivel, p.profesor;
+
+-- Exportar los datos de la vista a un archivo CSV
+COPY (SELECT * FROM vista_alumnos_por_clase) TO '/mnt/data/vista_alumnos_por_clase.csv' WITH (FORMAT CSV, HEADER);
+
+-- Seleccionar todos los datos de la vista vista_alumnos_por_clase
+SELECT * FROM vista_alumnos_por_clase;
