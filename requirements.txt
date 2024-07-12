@@ -1,6 +1,6 @@
-dotenv-python==0.0.1
+dotnev-python == 0.0.1
 fastapi==0.111.0
 uvicorn==0.30.1
 sqlalchemy==2.0.31
 psycopg2-binary==2.9.9
-setuptools
+setuptools==70.3.0
