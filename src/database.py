@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-SQLALCHEMY_DB = 'postgresql://postgres:123456@localhost:5433/armonia'
+SQLALCHEMY_DB = 'postgresql://postgres:1234@localhost:5433/armonia'
 
 engine = create_engine(SQLALCHEMY_DB)
 
