@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class ClasePorAlumnoBase(BaseModel):
     intrumento_nivel: int
-    profesor_intrumento: int
+    profesor_instrumento: int
     alumno_id: int
 
 
@@ -24,7 +24,7 @@ class AlumnoBase(BaseModel):
     apellido: str
     edad: int
     telefono: str
-    correro: str
+    correo: str
     familiar: bool
     descuento: int
 

@@ -9,7 +9,14 @@ SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123456@localhost:5433/armonia"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 
-sessionmaker = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+Base.metadata.create_all(engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

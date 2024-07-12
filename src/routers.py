@@ -20,7 +20,7 @@ def create_alumno(alumno: schemas.AlumnoCreate, db: Session = Depends(get_db)):
     return crud.create_alumno(db=db, alumno=alumno)
 
 
-@router.get("/alumnos/{alumno_id}", response_model=schemas.alumno)
+@router.get("/alumnos/{alumno_id}", response_model=schemas.Alumno)
 def read_alumno(alumno_id: int, db: Session = Depends(get_db)):
     db_alumno = crud.get_alumno(db, alumno_id=alumno_id)
     if db_alumno is None:
