@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 
-SQLALCHEMY_DB = 'postgresql+asyncpg://postgres:123456@localhost:5433/armonia'
+SQLALCHEMY_DB = 'postgresql+asyncpg://postgres:1234@localhost:5433/armonia'
 
 engine = create_async_engine(SQLALCHEMY_DB, echo = True)
 
