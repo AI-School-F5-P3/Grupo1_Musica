@@ -13,6 +13,6 @@ Acceder a la carpeta Docker y desde la terminal ejecutar el código:
     docker-compose up --build
 
 Ya podemos acceder a la base de datos utilizando en la terminal:
-    psql -h localhost -p 5433 -U postgres -armonia
+    psql -h localhost -p 5433 -U postgres -a armonia
 
 O a través de pgadmin4 o cualquier GUI para gestión de bases postgreSQL
