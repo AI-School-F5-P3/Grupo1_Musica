@@ -64,6 +64,7 @@ class Instrumento(Base):
     pack_id = Column(Integer, ForeignKey('pack.id'))
     profesor_instrumentos = relationship("Profesor_Instrumento", back_populates="instrumento")
     instrumento_niveles = relationship("Instrumento_Nivel", back_populates="instrumento")
+    pack = relationship("Pack", back_populates="instrumentos")
 
 class Instrumento_Nivel(Base):
     __tablename__ = 'instrumento_nivel'

@@ -34,3 +34,43 @@ class ActualizarAlumno(BaseModel):
     correo: Optional[str] = None
     familiar: Optional[bool] = None
     total_mes: Optional[int] = None
+
+class ClaseBase(BaseModel):
+    instrumento_nivel_id: int
+    profesor_instrumento_id: int
+
+class ClaseCreate(ClaseBase):
+    pass
+
+class Clase(ClaseBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class Profesor_InstrumentoBase(BaseModel):
+    profesor_id: int
+    instrumento_id: int
+
+class Profesor_InstrumentoCreate(Profesor_InstrumentoBase):
+    pass
+
+class Profesor_Instrumento(Profesor_InstrumentoBase):
+    id: int
+    clases: List[Clase] = []
+
+    class Config:
+        orm_mode = True
+
+class ProfesorBase(BaseModel):
+    profesor: str
+
+class ProfesorCreate(ProfesorBase):
+    pass
+
+class Profesor(ProfesorBase):
+    id: int
+    profesor_instrumentos: List[Profesor_Instrumento] = []
+
+    class Config:
+        orm_mode = True
