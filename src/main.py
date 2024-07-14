@@ -1,15 +1,8 @@
-from fastapi import FastAPI, HTTPException, Depends
-from sqlalchemy.orm import Session
+from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import and_
-import models
-from contextlib import asynccontextmanager
 import uvicorn
 from database import SessionLocal, engine, Base
 import schemas
-import datetime
 import crud
 
 async def lifespan(app: FastAPI):
