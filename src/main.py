@@ -95,7 +95,7 @@ async def borrar_profesor_route(
 
 # Get profesor por nombre
 
-@app.get("/profesores/nombre")
+@app.get("/profesores/get")
 async def buscar_profesor_route(
     nombre: str, 
     db: AsyncSession = Depends(get_db)
@@ -126,17 +126,17 @@ async def actualizar_descuentos_route(
 
 @app.get("/precios/get/")
 async def ver_precios_route(
-    pack_id: int,
+    pack: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_precios(db, pack_id)
+    return await crud.ver_precios(db, pack)
 
 @app.get("/descuentos/get/")
 async def ver_descuentos_route(
-    descuento_id: int,
+    descuento: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_descuentos(db, descuento_id)
+    return await crud.ver_descuentos(db, descuento)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

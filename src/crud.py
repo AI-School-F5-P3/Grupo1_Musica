@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import joinedload
 from sqlalchemy import and_
 import datetime
 from fastapi import HTTPException
@@ -161,23 +162,41 @@ async def actualizar_alumno(
 
 # Comprobar datos de alumno
 
+from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
+
+import models
+
 async def ver_alumno(
     db: AsyncSession,
-    alumno_nombre:str,
-    alumno_apellidos:str
+    alumno_nombre: str,
+    alumno_apellidos: str
 ) -> models.Alumno:
-        result = await db.execute(
-            select(models.Alumno).filter(
-                models.Alumno.nombre == alumno_nombre,
-                models.Alumno.apellido == alumno_apellidos)
-            )
-        alumno = result.scalars().first()
+    result = await db.execute(
+        select(models.Alumno)
+        .options(
+            joinedload(models.Alumno.inscripciones)
+            .joinedload(models.Inscripcion.clase)
+            .joinedload(models.Clase.instrumento_nivel)
+            .joinedload(models.Instrumento_Nivel.nivel),
+            joinedload(models.Alumno.inscripciones)
+            .joinedload(models.Inscripcion.clase)
+            .joinedload(models.Clase.profesor_instrumento)
+            .joinedload(models.Profesor_Instrumento.profesor)
+        )
+        .filter(
+            models.Alumno.nombre == alumno_nombre,
+            models.Alumno.apellido == alumno_apellidos
+        )
+    )
+    alumno = result.scalars().first()
 
-        if not alumno:
-            raise HTTPException(status_code = 404, detail = 'Alumno no encontrado')
-        
-        return alumno
+    if not alumno:
+        raise HTTPException(status_code=404, detail='Alumno no encontrado')
     
+    return alumno
 # Borrar alumno
 
 async def borrar_alumno(
@@ -260,16 +279,27 @@ async def update_profesor(
 async def buscar_profesor(
     db: AsyncSession,
     nombre_profesor: str
-) -> models.Profesor:
+):
     result = await db.execute(
-        select(models.Profesor).filter(models.Profesor.profesor == nombre_profesor)
+        select(models.Profesor)
+        .options(joinedload(models.Profesor.profesor_instrumentos).joinedload(models.Profesor_Instrumento.instrumento))
+        .filter(models.Profesor.profesor == nombre_profesor)
     )
     profesor = result.scalars().first()
 
     if profesor is None:
         raise HTTPException(status_code=404, detail="Profesor no encontrado")
     
-    return profesor
+    # Formatear la respuesta para incluir el nombre del instrumento
+    profesor_data = {
+        "nombre_profesor": profesor.profesor,
+        "instrumentos": [
+            {"nombre_instrumento": pi.instrumento.instrumento}
+            for pi in profesor.profesor_instrumentos
+        ]
+    }
+    
+    return profesor_data
 
 # Borrar un profesor
 
@@ -346,9 +376,9 @@ async def actualizar_descuentos(
 
 async def ver_precios(
     db: AsyncSession,
-    pack_id: int
+    pack_name: str
 ) -> models.Pack:
-    result = await db.execute(select(models.Pack).filter(models.Pack.id == pack_id))
+    result = await db.execute(select(models.Pack).filter(models.Pack.pack == pack_name))
     pack_existente = result.scalars().first()
 
     if not pack_existente:
@@ -360,12 +390,12 @@ async def ver_precios(
 
 async def ver_descuentos(
     db:AsyncSession,
-    descuento_id: int
+    descuento_descripcion: str
 )-> models.Descuento:
-    result = await db.execute(select(models.Descuento).filter(models.Descuento.id == descuento_id))
+    result = await db.execute(select(models.Descuento).filter(models.Descuento.descripcion == descuento_descripcion))
     descuento_existente = result.scalars().first()
 
     if not descuento_existente:
-        raise HTTPException(status_code=404, detail = "Id de descuento no encontrado")
+        raise HTTPException(status_code=404, detail = "Descripción de descuento no encontrado")
     
     return descuento_existente

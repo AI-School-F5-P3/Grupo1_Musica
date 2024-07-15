@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from API_calls import get_alumnos
+from API_calls import get_alumnos, get_profesores, get_precios, get_descuentos
 
 def change_screen(new_screen):
     st.session_state.screen = new_screen
@@ -189,7 +189,6 @@ def screen_nuevo_alumno():
         st.rerun()
 
 
-
 def screen_actualizar_alumno():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
@@ -245,9 +244,14 @@ def screen_get_alumno():
 
     apellidos = st.text_input("Apellidos del alumno")
 
-    if st.button("GET", type = "primary"):
-        data = get_alumnos(nombre, apellidos)
-        st.write(pd.DataFrame.from_dict(data, orient='index'))
+    if st.button("Get CSV", type = "primary"):
+        data, df = get_alumnos(nombre, apellidos)
+        st.write(df)
+    
+    if st.button("Get JSON", type = "primary"):
+        data, df = get_alumnos(nombre, apellidos)
+        st.write(data)
+    
 
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')
@@ -310,7 +314,9 @@ def screen_get_profesor():
 
     nombre = st.text_input("Nombre del profesor")
 
-    st.button('GET', type = "primary")
+    if st.button("GET", type = "primary"):
+        data = get_profesores(nombre)
+        st.write(data)
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
         st.rerun()
@@ -334,9 +340,9 @@ def screen_actualizar_descuentos():
     sax = "\U0001f3b7"
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Actualizar descuentos</h2>""", unsafe_allow_html=True)
-    descuentos = [1, 2, 3, 4]
+    descuentos = ["Familiar en la escuela", "Segundo curso del mismo instrumento", "Tercer curso del mismo instrumento", "Sin descuento"]
     instrumento = st.selectbox("Tipo de descuentos", options = descuentos)
-    descuento = st.number_input("Descuento a aplicar", value = 0.1, min_value = 0.1, max_value = 100.0, step = 0.1)
+    id_descuentos = st.number_input("Descuento a aplicar", value = 0.1, min_value = 0.1, max_value = 100.0, step = 0.1)
     st.button('Actualizar', type = 'primary')
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
@@ -347,9 +353,11 @@ def screen_consultar_precios():
     sax = "\U0001f3b7"
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Consultar precios</h2>""", unsafe_allow_html=True)
-    instrumentos = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violin y Bajo', 'Clarinete y Saxofón']
-    id_descuentos = st.selectbox("Instrumento a consultar precio", options = instrumentos)
-    st.button('GET', type = 'primary')
+    packs = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violin y Bajo', 'Clarinete y Saxofón']
+    id_pack = st.selectbox("Instrumento a consultar precio", options = packs)
+    if st.button('GET', type = 'primary'):
+        data = get_precios(id_pack)
+        st.write(pd.DataFrame(data))
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
         st.rerun()
@@ -359,9 +367,11 @@ def screen_consultar_descuentos():
     sax = "\U0001f3b7"
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Consultar descuentos</h2>""", unsafe_allow_html=True)
-    descuentos = [1, 2, 3, 4]
+    descuentos = ["Familiar en la escuela", "Segundo curso del mismo instrumento", "Tercer curso del mismo instrumento", "Sin descuento"]
     id_descuentos = st.selectbox("Id para consultar descuentos", options = descuentos)
-    st.button('GET', type = 'primary')
+    if st.button('GET', type = 'primary'):
+        data = get_descuentos(id_descuentos)
+        st.write(pd.DataFrame(data))
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
         st.rerun()
