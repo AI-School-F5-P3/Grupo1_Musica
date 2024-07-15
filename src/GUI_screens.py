@@ -103,13 +103,21 @@ def screen_precios():
     with col5:
         pass
     with col3:
-        nuevo_alumno = st.button("Actualizar precios de pack de instrumentos", type = "primary")
+        if st.button("Actualizar precios de pack de instrumentos", type = "primary"):
+            change_screen('screen_actualizar_precios')
+            st.rerun()
 
-        actualizar_alumno = st.button("Actualizar porcentaje de descuentos", type = "primary")
+        if st.button("Actualizar porcentaje de descuentos", type = "primary"):
+            change_screen('screen_actualizar_descuentos')
+            st.rerun()
 
-        borrar_alumno = st.button("Consultar precios por pack de instrumentos", type = "primary")
+        if st.button("Consultar precios por pack de instrumentos", type = "primary"):
+            change_screen('screen_consultar_precios')
+            st.rerun()
 
-        consultar_alumno = st.button("Consultar tipos de descuentos", type = "primary")
+        if st.button("Consultar tipos de descuentos", type = "primary"):
+            change_screen('screen_consultar_descuentos')
+            st.rerun()
 
 def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
@@ -304,4 +312,52 @@ def screen_get_profesor():
         st.rerun()
 
 
+def screen_actualizar_precios():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style="text-align: center;">Actualizar precios por pack de instrumentos</h2>""", unsafe_allow_html=True)
+    instrumentos = ['Piano', 'Guitarra', 'Bateria', 'Violin', 'Canto', 'Flauta', 'Saxofon', 'Clarinete', 'Percusión', 'Bajo']
+    pack = st.selectbox("Instrumentos", options = instrumentos)
+    precio = st.number_input("Precio de la clase", value = 0.00, min_value = 0.00, max_value = 10000.00, step = 0.01)
+    st.button('Actualizar', type = 'primary')
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_precios')
+        st.rerun()
 
+def screen_actualizar_descuentos():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style="text-align: center;">Actualizar descuentos</h2>""", unsafe_allow_html=True)
+    descuentos = [1, 2, 3, 4]
+    instrumento = st.selectbox("Tipo de descuentos", options = descuentos)
+    descuento = st.number_input("Descuento a aplicar", value = 0.1, min_value = 0.1, max_value = 100.0, step = 0.1)
+    st.button('Actualizar', type = 'primary')
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_precios')
+        st.rerun()
+
+def screen_consultar_precios():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style="text-align: center;">Consultar precios</h2>""", unsafe_allow_html=True)
+    instrumentos = ['Piano', 'Guitarra', 'Bateria', 'Violin', 'Canto', 'Flauta', 'Saxofon', 'Clarinete', 'Percusión', 'Bajo']
+    id_descuentos = st.selectbox("Instrumento a consultar precio", options = instrumentos)
+    st.button('GET', type = 'primary')
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_precios')
+        st.rerun()
+    
+def screen_consultar_descuentos():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style="text-align: center;">Consultar descuentos</h2>""", unsafe_allow_html=True)
+    descuentos = [1, 2, 3, 4]
+    id_descuentos = st.selectbox("Id para consultar descuentos", options = descuentos)
+    st.button('GET', type = 'primary')
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_precios')
+        st.rerun()
