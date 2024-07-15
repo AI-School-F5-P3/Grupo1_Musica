@@ -7,6 +7,17 @@ import crud
 import logging
 import sys
 
+
+# Ruta de la carpeta de logs
+log_dir = 'logs'
+
+# Crea la carpeta si no existe
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# Ruta completa del archivo de log
+log_file = os.path.join(log_dir, 'log_escuela.log')
+
 #configuración de log general, dentro de los paréntesis se codifica cómo quiero que me devuelva la información, level = el nivel a partir del cual quiero que me envía los mensajes. 
 logging.basicConfig(level=logging.DEBUG, 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S',
