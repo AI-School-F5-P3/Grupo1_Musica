@@ -294,3 +294,83 @@ async def borrar_profesor(
             raise HTTPException(status_code=500, detail="No se pudo borrar el profesor")
     
     return profesor
+
+# Actualizar precios
+
+async def actualizar_precios(
+    db: AsyncSession,
+    pack_id: int,
+    pack: schemas.ActualizarPrecio
+):
+    async with db.begin():
+        result = await db.execute(select(models.Pack),filter(models.Pack.id == pack_id))
+        pack_existente = result.scalars().first()
+
+        if not pack_existente:
+            raise HTTPException(status_code = 404, detail = "Pack no encontrado")
+        
+        update_data = pack.model_dump()
+        for key, value in update_data.items():
+            setattr(pack_existente, key, value)
+
+        try:
+            await db.commit()
+            await db.refresh(pack_existente)
+        except SQLAlchemyError:
+            await db.rollback()
+            raise HTTPException(status_code=500, detail="No se pudo actualizar el precio")
+        
+# Actualizar descuentos
+
+async def actualizar_descuentos(
+    db: AsyncSession,
+    descuento_id: int,
+    descuento: schemas.ActualizarDescuento
+):
+    async with db.begin():
+        result = await db.execute(select(models.Descuento).filter(models.Pack.id == descuento_id))
+        descuento_existente = result.scalars().first()
+
+        if not descuento_existente:
+            raise HTTPException(status_code=404, detail = "Id de descuento no encontrado")
+        
+        update_data = descuento.model_dump()
+        for key, value in update_data.items():
+            setattr(descuento_existente, key, value)
+
+        try:
+            await db.commit()
+            await db.refresh(descuento_existente)
+        except SQLAlchemyError:
+            await db.rollback()
+            raise HTTPException(status_code= 500, detail = "No se pudo actualizar el descuento")
+        
+# Comprobar precios
+
+async def ver_precios(
+    db: AsyncSession,
+    pack_id: int
+):
+    async with db.begin():
+        result = await db.execute(select(models.Pack).filter(models.Pack.id == pack_id))
+        pack_existente = result.scalars().first()
+
+        if not pack_existente:
+            raise HTTPException(status_code=404, detail = "Pack no encontrado")
+        
+        return pack_existente
+
+# Comprobar descuentos
+
+async def ver_descuentos(
+    db:AsyncSession,
+    descuento_id: int
+):
+    async with db.begin():
+        result = await db.execute(select(models.Descuento).filter(models.Descuento.id == descuento_id))
+        descuento_existente = result.scalars().first()
+
+        if not descuento_existente:
+            raise HTTPException(status_code=404, detail = "Id de descuento no encontrado")
+        
+        return descuento_existente

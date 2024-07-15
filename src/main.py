@@ -84,14 +84,7 @@ async def update_profesor_route(
 ):
     return await crud.update_profesor(profesor_nombre, profesor, db)
 
-#Get profesor por nombre
-@app.get("/profesores/nombre")
-async def buscar_profesor_route(
-    nombre: str, 
-    db: AsyncSession = Depends(get_db)
-):
-    return await crud.buscar_profesor(nombre, db)
-
+# Borrar profesor
 
 @app.delete("/profesores/delete/{profesor_id}", response_model=schemas.Profesor)
 async def borrar_profesor_route(
@@ -102,3 +95,48 @@ async def borrar_profesor_route(
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
+# Get profesor por nombre
+
+@app.get("/profesores/nombre")
+async def buscar_profesor_route(
+    nombre: str, 
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.buscar_profesor(nombre, db)
+
+# Actualizar precios
+
+@app.put("/precios/update")
+async def actualizar_precios_route(
+    pack_id: int,
+    pack: schemas.ActualizarPrecio,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.actualizar_precios(pack_id, pack, db)
+
+# Actualizar descuentos
+
+@app.put("/descuentos/update")
+async def actualizar_descuentos_route(
+    descuento_id: int,
+    descuento: schemas.ActualizarDescuento,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.actualizar_descuentos(descuento_id, descuento, db)
+
+# Ver precios
+
+@app.get("precios/get")
+async def ver_precios_route(
+    pack_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.ver_precios(pack_id, db)
+
+@app.get("descuentos/get")
+async def ver_descuentos_route(
+    descuento_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.ver_descuentos(descuento_id, db)

@@ -74,3 +74,12 @@ class Profesor(ProfesorBase):
 
     class Config:
         orm_mode = True
+
+class ActualizarProfesor(BaseModel):
+    nombre: Optional[str] = None
+
+class ActualizarPrecio(BaseModel):
+    precio: Optional[int] = None
+
+class ActualizarDescuento(BaseModel):
+    porcentaje: Optional[int] = None
