@@ -93,9 +93,6 @@ async def borrar_profesor_route(
 ):
     return await crud.borrar_profesor(db, profesor_id)
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-
 # Get profesor por nombre
 
 @app.get("/profesores/nombre")
@@ -140,3 +137,6 @@ async def ver_descuentos_route(
     db: AsyncSession = Depends(get_db)
 ):
     return await crud.ver_descuentos(db, descuento_id)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
