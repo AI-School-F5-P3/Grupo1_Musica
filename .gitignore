@@ -2,7 +2,15 @@
 __pycache__/
 # Ignorar archivos de registro
 logs/*.txt
-logs/*.log
+
+logs/
+
+*.log
+
+# Ignorar el contenido de la carpeta logs, pero mantener la carpeta
+logs/*
+!logs/.gitkeep
+
 # Ignorar archivos de bytecode de Python
 *.pyc
 *.pyo
