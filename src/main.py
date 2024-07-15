@@ -21,14 +21,51 @@ async def get_db():
     async with SessionLocal() as session:
         yield session
 
+# Crear alumno / alumno nuevo
+
+@app.post("/alumnos/crear_nuevo", response_model=schemas.AlumnoResponse)
+async def crear_alumno_route(
+    alumno: schemas.Crear_Alumno,
+    nombre_instrumento: str,
+    nombre_profesor: str,
+    nombre_nivel: str,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.crear_alumno(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
+
+# Crear alumno / alumno existente
+
+# Actualizar datos de alumno
+
+@app.put("/alumnos/update", response_model=schemas.AlumnoResponse)
+async def actualizar_alumno_route(
+    alumno_nombre: str,
+    alumno_apellidos:str, 
+    alumno: schemas.ActualizarAlumno, 
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.actualizar_alumno(alumno_nombre, alumno_apellidos, alumno, db)
+
 # Get alumno por nombre y apellidos
-@app.get("/alumnos/{nombre}")
-async def nombre_alumno(
+
+@app.get("/alumnos/get")
+async def ver_alumno_route(
     nombre: str, 
     apellido: str, 
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.buscar_alumno(nombre, apellido, db)
+    return await crud.ver_alumno(nombre, apellido, db)
+
+# Borrar alumno
+
+@app.delete("alumnos/borrar")
+async def borrar_alumno_route(
+    alumno_nombre: str,
+    alumno_apellidos: str,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.borrar_alumno(alumno_nombre, alumno_apellidos, db)
+
 
 #Get profesor por nombre
 @app.get("/profesores/{nombre}")
@@ -46,24 +83,6 @@ async def crear_profesor_route(
 ):
     return await crud.crear_profesor(db, profesor)
 
-@app.post("/alumnos/", response_model=schemas.AlumnoResponse)
-async def crear_alumno_route(
-    alumno: schemas.Crear_Alumno,
-    nombre_instrumento: str,
-    nombre_profesor: str,
-    nombre_nivel: str,
-    db: AsyncSession = Depends(get_db)
-):
-    return await crud.crear_alumno(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
-
-
-@app.put("/alumnos/{alumno_id}", response_model=schemas.AlumnoResponse)
-async def update_alumno_route(
-    alumno_id: int, 
-    alumno: schemas.ActualizarAlumno, 
-    db: AsyncSession = Depends(get_db)
-):
-    return await crud.actualizar_alumno(alumno_id, alumno, db)
 
 @app.delete("/profesores/delete/{profesor_id}", response_model=schemas.Profesor)
 async def borrar_profesor_route(

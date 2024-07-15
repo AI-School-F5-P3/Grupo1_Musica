@@ -7,7 +7,7 @@ from fastapi import HTTPException
 import models
 import schemas
 
-#Crear alumnos
+# Crear alumnos / alumno nuevo
 
 async def crear_alumno(
     db: AsyncSession,
@@ -126,67 +126,19 @@ async def crear_alumno(
 
     return nuevo_alumno
 
-#Crear profesores
-
-async def crear_profesor(
-    db: AsyncSession,
-    profesor: schemas.ProfesorCreate
-) -> models.Profesor:
-    nuevo_profesor = models.Profesor(profesor=profesor.profesor)
-    db.add(nuevo_profesor)
-
-    try:
-        await db.commit()
-        await db.refresh(nuevo_profesor)
-    except SQLAlchemyError:
-        await db.rollback()
-        raise HTTPException(status_code=500, detail="No se pudo crear profesor nuevo")
-    
-    return nuevo_profesor
-
-# Recuperar alumno por nombre y apellidos 
-
-async def buscar_alumno(
-    nombre: str, 
-    apellido: str, 
-    db: AsyncSession
-) -> models.Alumno:
-    alumnos = await db.execute(
-        select(models.Alumno).filter(
-            models.Alumno.nombre == nombre,
-            models.Alumno.apellido == apellido
-        )
-    )
-    alumno = alumnos.scalars().first()
-
-    if alumno is None:
-        raise HTTPException(status_code=404, detail="Alumno no encontrado")
-    
-    return alumno
-
-# Recuperar profesor por nombre
-async def buscar_profesor(
-    nombre_profesor: str, 
-    db: AsyncSession
-) -> models.Profesor:
-    result = await db.execute(
-        select(models.Profesor).filter(models.Profesor.profesor == nombre_profesor)
-    )
-    profesor = result.scalars().first()
-
-    if profesor is None:
-        raise HTTPException(status_code=404, detail="Profesor no encontrado")
-    
-    return profesor
+# Crear alumno / alumno existente
 
 # Actualizar datos de alumno
 async def actualizar_alumno(
-    alumno_id: int, 
+    nombre: str,
+    apellidos: str, 
     alumno: schemas.ActualizarAlumno, 
     db: AsyncSession
 ) -> models.Alumno:
     result = await db.execute(
-        select(models.Alumno).where(models.Alumno.id == alumno_id)
+        select(models.Alumno).where(
+            models.Alumno.id == nombre,
+            models.Alumno.apellido == apellidos)
         )
     existing_alumno = result.scalars().first()
 
@@ -207,6 +159,91 @@ async def actualizar_alumno(
     
     return existing_alumno
 
+# Comprobar datos de alumno
+
+async def ver_alumno(
+    db: AsyncSession,
+    alumno_nombre: str,
+    alumno_apellidos:str
+):
+    async with db.begin():
+        result = await db.execute(
+            select(models.Alumno).filter(
+                models.Alumno.nombre == alumno_nombre,
+                models.Alumno.apellido == alumno_apellidos)
+            )
+        alumno = result.scalars().first()
+
+        if not alumno:
+            raise HTTPException(status_code = 404, detail = 'Alumno no encontrado')
+        
+        return alumno
+    
+# Borrar alumno
+
+async def borrar_alumno(
+    db: AsyncSession,
+    alumno_nombre: str,
+    alumno_apellidos: str
+):
+    async with db.begin():
+        result = await db.execute(
+            select(models.Alumno).filter(
+                models.Alumno.nombre == alumno_nombre,
+                models.Alumno.apellido == alumno_apellidos)
+            )
+        alumno = result.scalars().first()
+        
+        if not alumno:
+            raise HTTPException(status_code=404, detail="Alumno no encontrado")
+        
+        await db.delete(alumno)
+        
+        try:
+            await db.commit()
+        except SQLAlchemyError:
+            await db.rollback()
+            raise HTTPException(status_code=500, detail="No se pudo borrar al alumno")
+    
+        return alumno
+
+
+#Crear profesores
+
+async def crear_profesor(
+    db: AsyncSession,
+    profesor: schemas.ProfesorCreate
+) -> models.Profesor:
+    nuevo_profesor = models.Profesor(profesor=profesor.profesor)
+    db.add(nuevo_profesor)
+
+    try:
+        await db.commit()
+        await db.refresh(nuevo_profesor)
+    except SQLAlchemyError:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="No se pudo crear profesor nuevo")
+    
+    return nuevo_profesor
+
+# Recuperar profesor por nombre
+async def buscar_profesor(
+    nombre_profesor: str, 
+    db: AsyncSession
+) -> models.Profesor:
+    result = await db.execute(
+        select(models.Profesor).filter(models.Profesor.profesor == nombre_profesor)
+    )
+    profesor = result.scalars().first()
+
+    if profesor is None:
+        raise HTTPException(status_code=404, detail="Profesor no encontrado")
+    
+    return profesor
+
+
+
+# Borrar un profesor
 async def borrar_profesor(
     db: AsyncSession, 
     profesor_id: int
