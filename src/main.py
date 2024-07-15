@@ -6,6 +6,7 @@ import schemas
 import crud
 import logging
 import sys
+import os
 
 
 # Ruta de la carpeta de logs
