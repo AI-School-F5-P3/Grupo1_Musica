@@ -1,14 +1,12 @@
-from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from ..config.config import database_url
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 
-SQLALCHEMY_DATABASE_URL = database_url
+SQLALCHEMY_DB = 'postgresql+asyncpg://postgres:1234@localhost:5433/armonia'
 
+engine = create_async_engine(SQLALCHEMY_DB, echo = True)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-sessionmaker = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit = False, autoflush = False, bind = engine, class_ = AsyncSession)
 
-
-Base = declarative_base
+Base = declarative_base()
