@@ -1,5 +1,5 @@
 import streamlit as st
-from GUI_screens import change_screen, home_screen, screen_alumnos, screen_precios, screen_profesores, screen_nuevo_alumno
+from GUI_screens import change_screen, home_screen, screen_alumnos, screen_precios, screen_profesores, screen_nuevo_alumno, screen_actualizar_alumno, screen_borrar_alumno, screen_get_alumno
 
 # Configuración inicial de la página
 if 'screen' not in st.session_state:
@@ -49,3 +49,9 @@ elif st.session_state.screen == 'screen_precios':
     screen_precios()
 elif st.session_state.screen == 'screen_nuevo_alumno':
     screen_nuevo_alumno()
+elif st.session_state.screen == 'screen_actualizar_alumno':
+    screen_actualizar_alumno()
+elif st.session_state.screen == 'screen_borrar_alumno':
+    screen_borrar_alumno()
+elif st.session_state.screen == 'screen_get_alumno':
+    screen_get_alumno()

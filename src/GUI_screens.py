@@ -37,11 +37,17 @@ def screen_alumnos():
             change_screen('screen_nuevo_alumno')
             st.rerun()
 
-        actualizar_alumno = st.button("Actualizar datos de alumno", type = "primary")
+        if st.button("Actualizar datos de alumno", type = "primary"):
+            change_screen('screen_actualizar_alumno')
+            st.rerun()
 
-        borrar_alumno = st.button("Eliminar alumno de la base de datos", type = "primary")
+        if st.button("Eliminar alumno de la base de datos", type = "primary"):
+            change_screen('screen_borrar_alumno')
+            st.rerun()
 
-        consultar_alumno = st.button("Consultar datos de un alumno", type = "primary")
+        if st.button("Consultar datos de un alumno", type = "primary"):
+            change_screen('screen_get_alumno')
+            st.rerun()
 
 def screen_profesores():
     trumpet = "\U0001f3ba"
@@ -107,11 +113,9 @@ def screen_nuevo_alumno():
 
     st.text_input("Nombre del alumno")
 
-    st.text_input("Apellidos")
+    st.text_input("Apellidos del alumno")
 
     age = st.number_input("Edad del alumno", value = 6, min_value = 6, max_value = 100, step = 1)
-
-    prefix = st.number_input("Prefijo telefono", value = 34, max_value = 99, step = 1)
 
     tfn_number = st.text_input("Número de teléfono")
 
@@ -120,8 +124,99 @@ def screen_nuevo_alumno():
     familiy = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
 
     instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+    
+    if instrumento == 'Piano':
+        options = ["Mar", "Flor", "Álvaro", "Marifé", "Nayara"]
+    elif instrumento == 'Guitarra':
+        options = ["Mar", "Flor"]
+    elif instrumento == 'Bateria':
+        options = ["Mar"]
+    elif instrumento == 'Violin':
+        options = ["Nayara"]
+    elif instrumento == 'Canto':
+        options = ["Marifé"]
+    elif instrumento == 'Flauta':
+        options = ["Mar"]
+    elif instrumento == 'Saxofón':
+        options = ["Nives"]
+    elif instrumento == 'Clarinete':
+        options = ['Nieves']
+    elif instrumento == 'Percusion':
+        options = ['Sofía']
+    else:
+        options = ["Nayara"]
 
-    nivel = st.selectbox("Nivel: ", options = ["Cero", "Inicio", "Medio", "Avanzado", "No aplica"])
+
+    profesor = st.selectbox("Clase", options = options)
+
+    if instrumento == 'Piano':
+        options = ["Cero", "Iniciación", "Medio", "Avanzado"]
+    elif instrumento == 'Guitarra':
+        options = ["Iniciación", "Medio"]
+    elif instrumento == 'Bateria':
+        options = ["Iniciación", "Medio", "Avanzado"]
+    elif instrumento == 'Flauta':
+        options = ["Iniciación", "Medio"]
+    elif instrumento == 'Bajo':
+        options = ["Iniciación", "Medio"]
+    else:
+        options = ["No aplica"]
+
+    nivel = st.selectbox("Nivel: ", options = options)
+
+    enviar = st.button("Registrar", type = "primary")
+    
+    if st.button("Atras", type = "primary"):
+        change_screen('screen_alumnos')
+        st.rerun()
+
+
+
+def screen_actualizar_alumno():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Nueva inscripcion de alumno</h2>""", unsafe_allow_html=True)
+
+    st.text_input("Nombre del alumno")
+
+    st.text_input("Apellidos del alumno")
+
+    age = st.number_input("Edad del alumno", value = 6, min_value = 6, max_value = 100, step = 1)
+
+    tfn_number = st.text_input("Número de teléfono")
+
+    email = st.text_input("Correo electrónico")
+
+    familiy = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
 
     enviar = st.button("Registrar", type = "primary")
 
+
+def screen_borrar_alumno():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Eliminar alumno de nuestros registros</h2>""", unsafe_allow_html=True)
+
+    st.text_input("Nombre del alumno")
+
+    st.text_input("Apellidos del alumno")
+
+    st.button("DELETE", type = "primary")
+
+def screen_get_alumno():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Consultar registro de alumno</h2>""", unsafe_allow_html=True)
+
+    st.text_input("Nombre del alumno")
+
+    st.text_input("Apellidos del alumno")
+
+    st.button("GET", type = "primary")
