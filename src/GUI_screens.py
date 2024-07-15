@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+from API_calls import get_alumnos
 
 def change_screen(new_screen):
     st.session_state.screen = new_screen
@@ -10,7 +12,7 @@ def home_screen():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
 
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Bienenido/a a la página de gestión de su base de datos.</h2>""", unsafe_allow_html=True)
 
@@ -18,7 +20,7 @@ def screen_alumnos():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
 
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Gestión de alumnos</h2>""", unsafe_allow_html=True)
 
@@ -53,7 +55,7 @@ def screen_profesores():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
 
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Gestión de profesores</h2>""", unsafe_allow_html=True)
 
@@ -88,7 +90,7 @@ def screen_precios():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
 
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Gestión de finanzas</h2>""", unsafe_allow_html=True)
 
@@ -123,7 +125,7 @@ def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
 
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Nuevo registro de alumno</h2>""", unsafe_allow_html=True)
 
@@ -192,7 +194,7 @@ def screen_actualizar_alumno():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
 
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Nueva inscripcion de alumno</h2>""", unsafe_allow_html=True)
 
@@ -218,7 +220,7 @@ def screen_actualizar_alumno():
 def screen_borrar_alumno():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Eliminar alumno de nuestros registros</h2>""", unsafe_allow_html=True)
 
@@ -235,15 +237,17 @@ def screen_borrar_alumno():
 def screen_get_alumno():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Consultar registro de alumno</h2>""", unsafe_allow_html=True)
 
-    st.text_input("Nombre del alumno")
+    nombre = st.text_input("Nombre del alumno")
 
-    st.text_input("Apellidos del alumno")
+    apellidos = st.text_input("Apellidos del alumno")
 
-    st.button("GET", type = "primary")
+    if st.button("GET", type = "primary"):
+        data = get_alumnos(nombre, apellidos)
+        st.write(pd.DataFrame.from_dict(data, orient='index'))
 
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')
@@ -253,7 +257,7 @@ def screen_get_alumno():
 def screen_nuevo_profesor():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Registrar nuevo profesor</h2>""", unsafe_allow_html=True)
 
@@ -270,7 +274,7 @@ def screen_nuevo_profesor():
 def screen_actualizar_profesor():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Modificar datos de profesor</h2>""", unsafe_allow_html=True)
 
@@ -286,7 +290,7 @@ def screen_actualizar_profesor():
 def screen_borrar_profesor():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Borrar registros de profesor</h2>""", unsafe_allow_html=True)
 
@@ -300,7 +304,7 @@ def screen_borrar_profesor():
 def screen_get_profesor():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
     st.markdown("""<h2 style="text-align: center;">Consultar registros de profesor</h2>""", unsafe_allow_html=True)
 
@@ -315,7 +319,7 @@ def screen_get_profesor():
 def screen_actualizar_precios():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Actualizar precios por pack de instrumentos</h2>""", unsafe_allow_html=True)
     instrumentos = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violin y Bajo', 'Clarinete y Saxofón']
     pack = st.selectbox("Instrumentos", options = instrumentos)
@@ -328,7 +332,7 @@ def screen_actualizar_precios():
 def screen_actualizar_descuentos():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Actualizar descuentos</h2>""", unsafe_allow_html=True)
     descuentos = [1, 2, 3, 4]
     instrumento = st.selectbox("Tipo de descuentos", options = descuentos)
@@ -353,7 +357,7 @@ def screen_consultar_precios():
 def screen_consultar_descuentos():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
-    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Consultar descuentos</h2>""", unsafe_allow_html=True)
     descuentos = [1, 2, 3, 4]
     id_descuentos = st.selectbox("Id para consultar descuentos", options = descuentos)

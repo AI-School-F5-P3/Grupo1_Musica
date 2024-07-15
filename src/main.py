@@ -48,7 +48,7 @@ async def actualizar_alumno_route(
 
 # Get alumno por nombre y apellidos
 
-@app.get("/alumnos/get/{alumno_nombre}")
+@app.get("/alumnos/get/")
 async def ver_alumno_route(
     nombre: str, 
     apellido: str, 
