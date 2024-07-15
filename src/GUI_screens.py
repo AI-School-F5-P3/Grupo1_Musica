@@ -68,13 +68,21 @@ def screen_profesores():
     with col5:
         pass
     with col3:
-        st.button("Nuevo Profesor", type = "primary")
+        if st.button("Nuevo Profesor", type = "primary"):
+            change_screen('screen_nuevo_profesor')
+            st.rerun()
 
-        actualizar_alumno = st.button("Actualizar datos de profesor", type = "primary")
+        if st.button("Actualizar datos de profesor", type = "primary"):
+            change_screen('screen_actualizar_profesor')
+            st.rerun()
 
-        borrar_alumno = st.button("Eliminar profesor de la base de datos", type = "primary")
+        if st.button("Eliminar profesor de la base de datos", type = "primary"):
+            change_screen('screen_borrar_profesor')
+            st.rerun()
 
-        consultar_alumno = st.button("Consultar datos de un profesor", type = "primary")
+        if st.button("Consultar datos de un profesor", type = "primary"):
+            change_screen('screen_get_profesor')
+            st.rerun()
     
 def screen_precios():
     trumpet = "\U0001f3ba"
@@ -165,7 +173,7 @@ def screen_nuevo_alumno():
     nivel = st.selectbox("Nivel: ", options = options)
 
     enviar = st.button("Registrar", type = "primary")
-    
+
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')
         st.rerun()
@@ -194,6 +202,10 @@ def screen_actualizar_alumno():
 
     enviar = st.button("Registrar", type = "primary")
 
+    if st.button("Atras", type = "primary"):
+        change_screen('screen_alumnos')
+        st.rerun()
+
 
 def screen_borrar_alumno():
     trumpet = "\U0001f3ba"
@@ -208,6 +220,10 @@ def screen_borrar_alumno():
 
     st.button("DELETE", type = "primary")
 
+    if st.button("Atras", type = "primary"):
+        change_screen('screen_alumnos')
+        st.rerun()
+
 def screen_get_alumno():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
@@ -220,3 +236,72 @@ def screen_get_alumno():
     st.text_input("Apellidos del alumno")
 
     st.button("GET", type = "primary")
+
+    if st.button("Atras", type = "primary"):
+        change_screen('screen_alumnos')
+        st.rerun()
+
+
+def screen_nuevo_profesor():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Registrar nuevo profesor</h2>""", unsafe_allow_html=True)
+
+    nombre = st.text_input("Nombre del profesor")
+
+    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+
+    st.button('Enviar', type = "primary")
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_profesores')
+        st.rerun()
+
+
+def screen_actualizar_profesor():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Modificar datos de profesor</h2>""", unsafe_allow_html=True)
+
+    nombre = st.text_input("Nombre del profesor")
+
+    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+
+    st.button('Enviar', type = "primary")
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_profesores')
+        st.rerun()
+
+def screen_borrar_profesor():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Borrar registros de profesor</h2>""", unsafe_allow_html=True)
+
+    nombre = st.text_input("Nombre del profesor")
+
+    st.button('DELETE', type = "primary")
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_profesores')
+        st.rerun()
+
+def screen_get_profesor():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Consultar registros de profesor</h2>""", unsafe_allow_html=True)
+
+    nombre = st.text_input("Nombre del profesor")
+
+    st.button('GET', type = "primary")
+    if st.button('Atrás', type = "primary"):
+        change_screen('screen_profesores')
+        st.rerun()
+
+
+
