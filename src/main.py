@@ -44,17 +44,17 @@ async def actualizar_alumno_route(
     alumno: schemas.ActualizarAlumno, 
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_alumno(alumno_nombre, alumno_apellidos, alumno, db)
+    return await crud.actualizar_alumno(db, alumno_nombre, alumno_apellidos, alumno)
 
 # Get alumno por nombre y apellidos
 
-@app.get("/alumnos/get")
+@app.get("/alumnos/get/{alumno_nombre}")
 async def ver_alumno_route(
     nombre: str, 
     apellido: str, 
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_alumno(nombre, apellido, db)
+    return await crud.ver_alumno(db, nombre, apellido)
 
 # Borrar alumno
 
@@ -64,7 +64,7 @@ async def borrar_alumno_route(
     alumno_apellidos: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.borrar_alumno(alumno_nombre, alumno_apellidos, db)
+    return await crud.borrar_alumno(db, alumno_nombre, alumno_apellidos)
 
 
 # Crear profesor
@@ -82,7 +82,7 @@ async def update_profesor_route(
     profesor: schemas.ActualizarProfesor,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.update_profesor(profesor_nombre, profesor, db)
+    return await crud.update_profesor(db, profesor_nombre, profesor)
 
 # Borrar profesor
 
@@ -103,7 +103,7 @@ async def buscar_profesor_route(
     nombre: str, 
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.buscar_profesor(nombre, db)
+    return await crud.buscar_profesor(db, nombre)
 
 # Actualizar precios
 
@@ -113,7 +113,7 @@ async def actualizar_precios_route(
     pack: schemas.ActualizarPrecio,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_precios(pack_id, pack, db)
+    return await crud.actualizar_precios(db, pack_id, pack)
 
 # Actualizar descuentos
 
@@ -123,20 +123,20 @@ async def actualizar_descuentos_route(
     descuento: schemas.ActualizarDescuento,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_descuentos(descuento_id, descuento, db)
+    return await crud.actualizar_descuentos(db, descuento_id, descuento)
 
 # Ver precios
 
-@app.get("precios/get")
+@app.get("/precios/get/")
 async def ver_precios_route(
     pack_id: int,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_precios(pack_id, db)
+    return await crud.ver_precios(db, pack_id)
 
-@app.get("descuentos/get")
+@app.get("/descuentos/get/")
 async def ver_descuentos_route(
     descuento_id: int,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_descuentos(descuento_id, db)
+    return await crud.ver_descuentos(db, descuento_id)
