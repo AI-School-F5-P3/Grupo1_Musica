@@ -314,9 +314,14 @@ def screen_get_profesor():
 
     nombre = st.text_input("Nombre del profesor")
 
-    if st.button("GET", type = "primary"):
-        data = get_profesores(nombre)
+    if st.button("Get CSV", type = "primary"):
+        data, df = get_profesores(nombre)
+        st.write(df)
+    
+    if st.button("Get JSON", type = "primary"):
+        data, df = get_profesores(nombre)
         st.write(data)
+
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
         st.rerun()
@@ -355,9 +360,12 @@ def screen_consultar_precios():
     st.markdown("""<h2 style="text-align: center;">Consultar precios</h2>""", unsafe_allow_html=True)
     packs = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violin y Bajo', 'Clarinete y Saxofón']
     id_pack = st.selectbox("Instrumento a consultar precio", options = packs)
-    if st.button('GET', type = 'primary'):
+    if st.button('Get CSV', type = 'primary'):
         data = get_precios(id_pack)
         st.write(pd.DataFrame(data))
+    if st.button('Get JSON'):
+        data = get_precios(id_pack)
+        st.write(data)
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
         st.rerun()
@@ -369,9 +377,12 @@ def screen_consultar_descuentos():
     st.markdown("""<h2 style="text-align: center;">Consultar descuentos</h2>""", unsafe_allow_html=True)
     descuentos = ["Familiar en la escuela", "Segundo curso del mismo instrumento", "Tercer curso del mismo instrumento", "Sin descuento"]
     id_descuentos = st.selectbox("Id para consultar descuentos", options = descuentos)
-    if st.button('GET', type = 'primary'):
+    if st.button('Get CSV', type = 'primary'):
         data = get_descuentos(id_descuentos)
         st.write(pd.DataFrame(data))
+    if st.button('Get JSON', type = 'primary'):
+        data = get_descuentos(id_descuentos)
+        st.write(data)
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
         st.rerun()

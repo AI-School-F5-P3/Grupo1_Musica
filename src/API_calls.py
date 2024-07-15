@@ -81,7 +81,7 @@ def get_profesores(nombre):
         # Reordenar las columnas según el orden deseado
         df = df[["nombre_profesor", "instrumento"]]
 
-        return df
+        return data, df
     else:
         # Ocurrió un error
         print(f'Error al hacer la solicitud: {response.status_code}')
