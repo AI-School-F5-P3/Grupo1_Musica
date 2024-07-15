@@ -317,7 +317,7 @@ def screen_actualizar_precios():
     sax = "\U0001f3b7"
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía{sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Actualizar precios por pack de instrumentos</h2>""", unsafe_allow_html=True)
-    instrumentos = ['Piano', 'Guitarra', 'Bateria', 'Violin', 'Canto', 'Flauta', 'Saxofon', 'Clarinete', 'Percusión', 'Bajo']
+    instrumentos = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violin y Bajo', 'Clarinete y Saxofón']
     pack = st.selectbox("Instrumentos", options = instrumentos)
     precio = st.number_input("Precio de la clase", value = 0.00, min_value = 0.00, max_value = 10000.00, step = 0.01)
     st.button('Actualizar', type = 'primary')
@@ -343,7 +343,7 @@ def screen_consultar_precios():
     sax = "\U0001f3b7"
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
     st.markdown("""<h2 style="text-align: center;">Consultar precios</h2>""", unsafe_allow_html=True)
-    instrumentos = ['Piano', 'Guitarra', 'Bateria', 'Violin', 'Canto', 'Flauta', 'Saxofon', 'Clarinete', 'Percusión', 'Bajo']
+    instrumentos = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violin y Bajo', 'Clarinete y Saxofón']
     id_descuentos = st.selectbox("Instrumento a consultar precio", options = instrumentos)
     st.button('GET', type = 'primary')
     if st.button('Atrás', type = "primary"):
