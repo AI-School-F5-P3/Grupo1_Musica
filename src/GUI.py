@@ -1,5 +1,8 @@
 import streamlit as st
-from GUI_screens import change_screen, home_screen, screen_alumnos, screen_precios, screen_profesores, screen_nuevo_alumno, screen_actualizar_alumno, screen_borrar_alumno, screen_get_alumno, screen_actualizar_profesor, screen_borrar_profesor, screen_get_profesor, screen_nuevo_profesor, screen_actualizar_descuentos, screen_actualizar_precios, screen_consultar_descuentos, screen_consultar_precios
+from GUI_screens import change_screen, home_screen, screen_alumnos, screen_precios, screen_profesores
+from GUI_screens_alumnos import screen_nuevo_alumno, screen_actualizar_alumno, screen_borrar_alumno, screen_get_alumno 
+from GUI_screens_profesores import screen_actualizar_profesor, screen_borrar_profesor, screen_get_profesor, screen_nuevo_profesor
+from GUI_screens_precios import screen_actualizar_descuentos, screen_actualizar_precios, screen_consultar_descuentos, screen_consultar_precios
 
 # Configuración inicial de la página
 if 'screen' not in st.session_state:
