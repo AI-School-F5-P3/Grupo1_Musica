@@ -1,0 +1,58 @@
+import pytest
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.orm import declarative_base
+from src.main import app, get_db
+from src.database import Base
+import asyncio
+
+# Configuración de la base de datos de prueba
+SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+TestingSessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
+
+async def override_get_db():
+    async with TestingSessionLocal() as session:
+        yield session
+
+app.dependency_overrides[get_db] = override_get_db
+
+@pytest.fixture(scope="module")
+def event_loop():
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+
+@pytest.fixture(scope="module")
+async def test_app():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
+    
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+@pytest.mark.asyncio
+async def test_crear_alumno(test_app):
+    response = await test_app.post("/alumnos/crear_nuevo", 
+        json={
+            "nombre": "Juan",
+            "apellido": "Pérez",
+            "edad": 20,
+            "telefono": "123456789",
+            "correo": "juan@example.com",
+            "familiar": False,
+            "total_mes": 100
+        }, 
+        params={
+            "nombre_instrumento": "Guitarra",
+            "nombre_profesor": "Luis",
+            "nombre_nivel": "Principiante"
+        }
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["nombre"] == "Juan"
+    assert data["apellido"] == "Pérez"
