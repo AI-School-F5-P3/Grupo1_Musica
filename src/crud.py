@@ -208,7 +208,7 @@ async def borrar_alumno(
         return alumno
 
 
-#Crear profesores
+# Crear profesores
 
 async def crear_profesor(
     db: AsyncSession,
@@ -226,7 +226,38 @@ async def crear_profesor(
     
     return nuevo_profesor
 
+# Actualizar profesor
+
+async def update_profesor(
+    db: AsyncSession,
+    profesor_nombre: str,
+    profesor: schemas.ActualizarProfesor
+)-> models.Profesor:
+    result = await db.execute(
+        select(models.Profesor).where(
+            models.Profesor.nombre == profesor_nombre)
+        )
+    existing_profesor = result.scalars().first()
+
+    if not existing_profesor:
+        raise HTTPException(status_code=404, detail="Profesor no encontrado")
+
+    # Actualizar los campos del profesor
+    update_data = profesor.model_dump()
+    for key, value in update_data.items():
+        setattr(existing_profesor, key, value)
+
+    try:
+        await db.commit()
+        await db.refresh(existing_profesor)
+    except SQLAlchemyError:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="No se pudo actualizar al profesor")
+    
+    return existing_profesor
+    
 # Recuperar profesor por nombre
+
 async def buscar_profesor(
     nombre_profesor: str, 
     db: AsyncSession
@@ -241,9 +272,8 @@ async def buscar_profesor(
     
     return profesor
 
-
-
 # Borrar un profesor
+
 async def borrar_profesor(
     db: AsyncSession, 
     profesor_id: int

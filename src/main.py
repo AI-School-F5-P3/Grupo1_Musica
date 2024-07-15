@@ -67,21 +67,30 @@ async def borrar_alumno_route(
     return await crud.borrar_alumno(alumno_nombre, alumno_apellidos, db)
 
 
-#Get profesor por nombre
-@app.get("/profesores/{nombre}")
-async def nombre_profesor(
-    nombre: str, 
-    db: AsyncSession = Depends(get_db)
-):
-    return await crud.buscar_profesor(nombre, db)
-
 # Crear profesor
-@app.post("/profesores/", response_model=schemas.ProfesorResponse)
+@app.post("/profesores/crear", response_model=schemas.ProfesorResponse)
 async def crear_profesor_route(
     profesor: schemas.ProfesorCreate,
     db: AsyncSession = Depends(get_db)
 ):
     return await crud.crear_profesor(db, profesor)
+
+# Actualizar datos de profesor
+@app.put("profesores/update", response_model=schemas.ProfesorResponse)
+async def update_profesor_route(
+    profesor_nombre: str,
+    profesor: schemas.ActualizarProfesor,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.update_profesor(profesor_nombre, profesor, db)
+
+#Get profesor por nombre
+@app.get("/profesores/nombre")
+async def buscar_profesor_route(
+    nombre: str, 
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.buscar_profesor(nombre, db)
 
 
 @app.delete("/profesores/delete/{profesor_id}", response_model=schemas.Profesor)
