@@ -10,7 +10,8 @@ import os
 
 
 # Ruta de la carpeta de logs
-log_dir = 'logs'
+src_dir = os.path.dirname(os.path.dirname(__file__))
+log_dir = os.path.join(src_dir, 'src', 'logs')
 
 # Crea la carpeta si no existe
 if not os.path.exists(log_dir):
@@ -22,8 +23,10 @@ log_file = os.path.join(log_dir, 'log_escuela.log')
 #configuración de log general, dentro de los paréntesis se codifica cómo quiero que me devuelva la información, level = el nivel a partir del cual quiero que me envía los mensajes. 
 logging.basicConfig(level=logging.DEBUG, 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S',
-                    filename = 'log_escuela.log', 
+                    filename = log_file, 
                     filemode = 'a')
+
+
 #esta configuración es para que detecte y registre en el archivo log todos los posibles errores que no se registran a mano a lo largo del código con logging.debug o logging.error (por ejemplo)
 def handle_exception(exc_type, exc_value, exc_traceback): 
     logging.error("excepcion no recogida", exc_info=(exc_type, exc_value, exc_traceback))
