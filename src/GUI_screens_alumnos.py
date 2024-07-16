@@ -5,6 +5,7 @@ from API_calls_get import get_alumnos
 from API_calls_put import update_alumno
 from API_calls_delete import borrar_alumno
 from API_calls_post import create_alumno, create_inscripcion
+from logger import logger
 
 def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
@@ -83,8 +84,10 @@ def screen_nuevo_alumno():
         result = create_alumno(instrumento, profesor, nivel, data)
         if result:
             st.success("Alumno registrado correctamente")
+            logger.info(f'Alumno {nombre} registrado correctamente a través de Streamlit')
         else:
             st.error("Hubo un error registrando los datos.")
+            logger.error(f'Error registrando Alumno {nombre} a través de Streamlit')
     
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')
@@ -153,8 +156,10 @@ def screen_nueva_inscripcion():
             result = create_inscripcion(instrumento, profesor, nivel, data)
             if result:
                 st.success("Alumno registrado correctamente.")
+                logger.info(f'Alumno {nombre} inscrito correctamente a través de Streamlit')
             else:
                 st.error("Hubo un error registrando los datos.")
+                logger.error(f'Error registrando nueva inscsripción de {nombre} a través de Streamlit')
     else:
         st.warning("Por favor, ingresa el nombre y apellido del alumno.")
 
@@ -205,8 +210,10 @@ def screen_actualizar_alumno():
         result = update_alumno(nombre, apellidos, data)
         if result:
             st.success("Datos actualizados correctamente")
+            logger.info(f'Datos de Alumno {nombre} actualizados correctamente a través de Streamlit')
         else:
             st.error("Hubo un error actualizando los datos.")
+            logger.error(f'Error actualizando datos de Alumno {nombre} a través de Streamlit')
 
 
     if st.button("Atras", type = "primary"):
@@ -229,8 +236,10 @@ def screen_borrar_alumno():
         result = borrar_alumno(nombre, apellido)
         if result:
             st.success("Alumno eliminado correctamente")
+            logger.info(f'Alumno {nombre} eliminado correctamente a través de Streamlit')
         else:
             st.error("Hubo un error eliminando los datos")
+            logger.error(f'Error eliminando Alumno {nombre} a través de Streamlit')
 
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')
@@ -249,10 +258,12 @@ def screen_get_alumno():
 
     if st.button("Get CSV", type = "primary"):
         data, df = get_alumnos(nombre, apellidos)
+        logger.info(f'Obtenidos datos de Alumno {nombre} en CSV a través de Streamlit')
         st.write(df)
     
     if st.button("Get JSON", type = "primary"):
         data, df = get_alumnos(nombre, apellidos)
+        logger.info(f'Obtenidos datos de Alumno {nombre} en JSON a través de Streamlit')
         st.write(data)
     
 

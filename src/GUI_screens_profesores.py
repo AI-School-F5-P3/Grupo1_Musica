@@ -5,6 +5,7 @@ from API_calls_get import get_profesores
 from API_calls_put import update_profesor
 from API_calls_delete import borrar_profesor
 from API_calls_post import create_profesor
+from logger import logger
 
 def screen_nuevo_profesor():
     trumpet = "\U0001f3ba"
@@ -48,8 +49,10 @@ def screen_nuevo_profesor():
         result = create_profesor(nombre, instrumento1, instrumento2, instrumento3, instrumento4, instrumento5)
         if result:
             st.success("Profesor registrado correctamente")
+            logger.info(f'Profesor {nombre} registrado correctamente a través de Streamlit')
         else:
             st.error("Hubo un error registrando los datos.")
+            logger.error(f'Error registrando profesor {nombre} a través de Streamlit')
 
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
@@ -75,8 +78,11 @@ def screen_actualizar_profesor():
         result = update_profesor(nombre, data)
         if result:
             st.success("Datos actualizados correctamente")
+            logger.info(f'Datos de Profesor {nombre} actualizados correctamente a través de Streamlit')
         else:
             st.error("Hubo un error actualizando los datos.")
+            logger.error(f'Error actualizando datos de profesor {nombre} a través de Streamlit')
+            
 
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
@@ -95,8 +101,10 @@ def screen_borrar_profesor():
         result = borrar_profesor(nombre)
         if result:
             st.success("Profesor eliminado correctamente")
+            logger.info(f'Profesor {nombre} eliminado correctamente a través de Streamlit')
         else:
             st.error("Hubo un error eliminando los datos")
+            logger.error(f'Error eliminando Profesor {nombre} a través de Streamlit')
 
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
@@ -113,10 +121,12 @@ def screen_get_profesor():
 
     if st.button("Get CSV", type = "primary"):
         data, df = get_profesores(nombre)
+        logger.info(f'Obtenidos datos de Profesor {nombre} en CSV a través de Streamlit')
         st.write(df)
     
     if st.button("Get JSON", type = "primary"):
         data, df = get_profesores(nombre)
+        logger.info(f'Obtenidos datos de Profesor {nombre} en JSON a través de Streamlit')
         st.write(data)
 
     if st.button('Atrás', type = "primary"):

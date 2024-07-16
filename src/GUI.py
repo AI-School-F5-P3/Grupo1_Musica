@@ -1,11 +1,15 @@
 import streamlit as st
+from logger import logger
 from GUI_screens import change_screen, home_screen, screen_alumnos, screen_precios, screen_profesores
 from GUI_screens_alumnos import screen_nuevo_alumno, screen_actualizar_alumno, screen_borrar_alumno, screen_get_alumno , screen_nueva_inscripcion
 from GUI_screens_profesores import screen_actualizar_profesor, screen_borrar_profesor, screen_get_profesor, screen_nuevo_profesor
 from GUI_screens_precios import screen_actualizar_descuentos, screen_actualizar_precios, screen_consultar_descuentos, screen_consultar_precios
 
-# Función para el login
+# Función para definir una pantalla de login inicial
 def login():
+    '''
+    username se ha dijado como admin y password como 1234 para facilitar las pruebas, pero lo correcto sería externalizar estos datos.
+    '''
     st.sidebar.subheader("Login")
     username = st.sidebar.text_input("Usuario")
     password = st.sidebar.text_input("Contraseña", type="password")
@@ -13,8 +17,10 @@ def login():
         # Verificar las credenciales (simulado)
         if username == "admin" and password == "1234":
             st.session_state.logged_in = True
+            logger.info(f'Se ha iniciado sesión en streamlit')
             st.success("¡Inicio de sesión exitoso!")
         else:
+            logger.error(f'Inicio de sesión en Streamlit fallido')
             st.error("Usuario o contraseña incorrectos.")
 
 # Configuración inicial de la página
