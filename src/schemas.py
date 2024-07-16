@@ -10,7 +10,6 @@ class ProfesorResponse(ProfesorCreate):
     class Config:
         orm_mode = True
 
-
 class Crear_Alumno(BaseModel):
     nombre: str
     apellido: str
@@ -64,9 +63,6 @@ class Profesor_Instrumento(Profesor_InstrumentoBase):
 
 class ProfesorBase(BaseModel):
     profesor: str
-
-class ProfesorCreate(ProfesorBase):
-    pass
 
 class ActualizarProfesor(BaseModel):
     profesor: Optional[str] = None
