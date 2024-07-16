@@ -12,7 +12,7 @@ class Alumno(Base):
     correo = Column(String)
     familiar = Column(Boolean)
     total_mes = Column(Integer)
-    inscripciones = relationship("Inscripcion", back_populates="alumno")
+    inscripciones = relationship("Inscripcion", back_populates="alumno", cascade = "all, delete")
 
 class Inscripcion(Base):
     __tablename__ = 'inscripcion'

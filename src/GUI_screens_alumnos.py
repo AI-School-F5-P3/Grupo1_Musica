@@ -3,6 +3,7 @@ import pandas as pd
 from GUI_screens import change_screen
 from API_calls_get import get_alumnos
 from API_calls_put import update_alumno
+from API_calls_delete import borrar_alumno
 
 def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
@@ -126,11 +127,16 @@ def screen_borrar_alumno():
 
     st.markdown("""<h2 style="text-align: center;">Eliminar alumno de nuestros registros</h2>""", unsafe_allow_html=True)
 
-    st.text_input("Nombre del alumno")
+    nombre = st.text_input("Nombre del alumno")
 
-    st.text_input("Apellidos del alumno")
+    apellido = st.text_input("Apellidos del alumno")
 
-    st.button("DELETE", type = "primary")
+    if st.button("DELETE", type = "primary"):
+        result = borrar_alumno(nombre, apellido)
+        if result:
+            st.success("Alumno eliminado correctamente")
+        else:
+            st.error("Hubo un error eliminando los datos")
 
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')

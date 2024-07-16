@@ -68,13 +68,6 @@ class ProfesorBase(BaseModel):
 class ProfesorCreate(ProfesorBase):
     pass
 
-class Profesor(ProfesorBase):
-    id: int
-    profesor_instrumentos: List[Profesor_Instrumento] = []
-
-    class Config:
-        orm_mode = True
-
 class ActualizarProfesor(BaseModel):
     profesor: Optional[str] = None
 

@@ -58,7 +58,7 @@ async def ver_alumno_route(
 
 # Borrar alumno
 
-@app.delete("/alumnos/borrar")
+@app.delete("/alumnos/delete/{alumno_nombre}/{alumno_apellidos}", response_model = schemas.AlumnoResponse)
 async def borrar_alumno_route(
     alumno_nombre: str,
     alumno_apellidos: str,
@@ -86,12 +86,12 @@ async def update_profesor_route(
 
 # Borrar profesor
 
-@app.delete("/profesores/delete/{profesor_id}", response_model=schemas.Profesor)
+@app.delete("/profesores/delete/{profesor_name}", response_model=schemas.ProfesorResponse)
 async def borrar_profesor_route(
-    profesor_id: int,
+    profesor_name: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.borrar_profesor(db, profesor_id)
+    return await crud.borrar_profesor(db, profesor_name)
 
 # Get profesor por nombre
 

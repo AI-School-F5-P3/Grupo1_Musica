@@ -210,7 +210,7 @@ async def borrar_alumno(
                 models.Alumno.nombre == alumno_nombre,
                 models.Alumno.apellido == alumno_apellidos)
             )
-        alumno = result.scalars().first()
+        alumno = result.scalar_one()
         
         if not alumno:
             raise HTTPException(status_code=404, detail="Alumno no encontrado")
@@ -305,10 +305,10 @@ async def buscar_profesor(
 
 async def borrar_profesor(
     db: AsyncSession, 
-    profesor_id: int
+    profesor_name: str
 ):
     async with db.begin():
-        result = await db.execute(select(models.Profesor).filter(models.Profesor.id == profesor_id))
+        result = await db.execute(select(models.Profesor).filter(models.Profesor.profesor == profesor_name))
         profesor = result.scalars().first()
         
         if not profesor:
@@ -322,7 +322,7 @@ async def borrar_profesor(
             await db.rollback()
             raise HTTPException(status_code=500, detail="No se pudo borrar el profesor")
     
-    return profesor
+        return profesor
 
 # Actualizar precios
 

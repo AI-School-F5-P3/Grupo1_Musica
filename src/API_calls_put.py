@@ -1,8 +1,4 @@
 import requests
-import pandas as pd
-from pandas import json_normalize
-import numpy
-from urllib.parse import quote
 
 def update_alumno(nombre, apellidos, data):
     url = 'http://127.0.0.1:8000/alumnos/update'

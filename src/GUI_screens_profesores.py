@@ -3,6 +3,7 @@ import pandas as pd
 from GUI_screens import change_screen
 from API_calls_get import get_profesores
 from API_calls_put import update_profesor
+from API_calls_delete import borrar_profesor
 
 def screen_nuevo_profesor():
     trumpet = "\U0001f3ba"
@@ -56,7 +57,13 @@ def screen_borrar_profesor():
 
     nombre = st.text_input("Nombre del profesor")
 
-    st.button('DELETE', type = "primary")
+    if st.button("DELETE", type = "primary"):
+        result = borrar_profesor(nombre)
+        if result:
+            st.success("Profesor eliminado correctamente")
+        else:
+            st.error("Hubo un error eliminando los datos")
+
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
         st.rerun()
