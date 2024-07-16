@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 import uvicorn
 from database import SessionLocal, engine, Base, init_db
@@ -92,12 +92,13 @@ async def update_profesor_route(
 
 # Borrar profesor
 
-@app.delete("/profesores/delete/{profesor_name}", response_model=schemas.ProfesorResponse)
+@app.delete("/profesores/delete/{profesor_name}", response_model=schemas.ProfesorDeleteResponse)
 async def borrar_profesor_route(
     profesor_name: str,
     db: AsyncSession = Depends(get_db)
 ):
     return await crud.borrar_profesor(db, profesor_name)
+
 
 # Get profesor por nombre
 

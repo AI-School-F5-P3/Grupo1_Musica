@@ -51,7 +51,7 @@ class Profesor(Base):
     __table_args__ = {'schema': 'armonia'}
     id = Column(Integer, primary_key=True, index=True)
     profesor = Column(String, index=True)
-    profesor_instrumentos = relationship("Profesor_Instrumento", back_populates="profesor")
+    profesor_instrumentos = relationship("Profesor_Instrumento", back_populates="profesor", cascade = "all, delete")
 
 class Profesor_Instrumento(Base):
     __tablename__ = 'profesor_instrumento'

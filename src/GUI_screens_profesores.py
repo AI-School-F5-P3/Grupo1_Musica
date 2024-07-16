@@ -4,6 +4,7 @@ from GUI_screens import change_screen
 from API_calls_get import get_profesores
 from API_calls_put import update_profesor
 from API_calls_delete import borrar_profesor
+from API_calls_post import create_profesor
 
 def screen_nuevo_profesor():
     trumpet = "\U0001f3ba"
@@ -14,9 +15,42 @@ def screen_nuevo_profesor():
 
     nombre = st.text_input("Nombre del profesor")
 
-    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+    # Lista de opciones inicial
+    opciones_iniciales = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"]
 
-    st.button('Enviar', type = "primary")
+    # Incluir None en las opciones iniciales
+    opciones_iniciales_con_none = ["None"] + opciones_iniciales
+
+    # Selectbox para el primer instrumento
+    instrumento1 = st.selectbox("Clase 1", options=opciones_iniciales_con_none)
+
+    # Filtrar opciones para el segundo selectbox
+    opciones2 = [opcion for opcion in opciones_iniciales if opcion != instrumento1]
+    opciones2 = ["None"] + opciones2
+    instrumento2 = st.selectbox("Clase 2", options=opciones2)
+
+    # Filtrar opciones para el tercer selectbox
+    opciones3 = [opcion for opcion in opciones2 if opcion != instrumento2 and opcion != "None"]
+    opciones3 = ["None"] + opciones3
+    instrumento3 = st.selectbox("Clase 3", options=opciones3)
+
+    # Filtrar opciones para el cuarto selectbox
+    opciones4 = [opcion for opcion in opciones3 if opcion != instrumento3 and opcion != "None"]
+    opciones4 = ["None"] + opciones4
+    instrumento4 = st.selectbox("Clase 4", options=opciones4)
+
+    # Filtrar opciones para el quinto selectbox
+    opciones5 = [opcion for opcion in opciones4 if opcion != instrumento4 and opcion != "None"]
+    opciones5 = ["None"] + opciones5
+    instrumento5 = st.selectbox("Clase 5", options=opciones5)
+
+    if st.button("Registro", type = "primary"):
+        result = create_profesor(nombre, instrumento1, instrumento2, instrumento3, instrumento4, instrumento5)
+        if result:
+            st.success("Profesor registrado correctamente")
+        else:
+            st.error("Hubo un error registrando los datos.")
+
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
         st.rerun()
