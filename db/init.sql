@@ -1,16 +1,16 @@
--- Establecer la codificación de caracteres a UTF8
-\encoding UTF8
+-- -- Establecer la codificación de caracteres a UTF8
+-- \encoding UTF8
 
--- Conectarse a la base de datos postgres
-\c postgres
+-- -- Conectarse a la base de datos postgres
+-- \c postgres
 
--- Cerrar todas las conexiones activas a la base de datos 'armonia'
-SELECT pg_terminate_backend(pid)  -- Terminar la conexión usando el PID
-FROM pg_stat_activity
-WHERE datname = 'armonia' AND pid <> pg_backend_pid();  -- Excluir la conexión actual
+-- -- Cerrar todas las conexiones activas a la base de datos 'armonia'
+-- SELECT pg_terminate_backend(pid)  -- Terminar la conexión usando el PID
+-- FROM pg_stat_activity
+-- WHERE datname = 'armonia' AND pid <> pg_backend_pid();  -- Excluir la conexión actual
 
--- Conectarse a la base de datos 'armonia'
-\c armonia
+-- -- Conectarse a la base de datos 'armonia'
+-- \c armonia
 
 -- Establecer la codificación de cliente a UTF8
 SET client_encoding TO 'UTF8';
@@ -343,293 +343,195 @@ ON CONFLICT (correo) DO NOTHING;
 -- SELECT * FROM armonia.alumno;
 
 
--- Inscripción de los alumnos en las clases específicas
+-- --------------------- funciones para la inscripcion de alumnos --------------------- --
 
--- Inscribir alumnos en clases
+-- Obtener la cantidad de clases del mismo pack a las que ya esta inscrito un alumno
+-- DECLARE
+--     cantidad_clases INT; -- Declara una variable para almacenar el resultado
+-- BEGIN
+--     -- Realiza la consulta para contar las clases del pack especificado para el alumno
+--     SELECT 
+--         COUNT(CASE WHEN pk.id = p_pack_id THEN c.id END) AS cantidad_clases_pack -- Cuenta las clases del pack especificado
+--     INTO cantidad_clases -- Almacena el resultado en la variable
+--     FROM armonia.alumno a -- Selecciona de la tabla de alumnos
+--     LEFT JOIN armonia.inscripcion ins ON a.id = ins.alumno_id -- Une con la tabla de inscripciones
+--     LEFT JOIN armonia.clase c ON ins.clase_id = c.id -- Une con la tabla de clases
+--     LEFT JOIN armonia.instrumento_nivel inl ON c.instrumento_nivel_id = inl.id -- Une con los niveles de instrumentos
+--     LEFT JOIN armonia.instrumento i ON inl.instrumento_id = i.id -- Une con la tabla de instrumentos
+--     LEFT JOIN armonia.nivel n ON inl.nivel_id = n.id -- Une con la tabla de niveles
+--     LEFT JOIN armonia.profesor_instrumento pi ON c.profesor_instrumento_id = pi.id -- Une con la tabla de profesores
+--     LEFT JOIN armonia.profesor p ON pi.profesor_id = p.id -- Une con la tabla de profesores
+--     LEFT JOIN armonia.pack pk ON i.pack_id = pk.id -- Une con la tabla de packs de instrumentos
+--     WHERE a.id = p_alumno_id -- Filtra por el ID del alumno proporcionado
+--     GROUP BY a.id; -- Agrupa por el ID del alumno para la agregación
+    
+--     RETURN cantidad_clases; -- Devuelve la cantidad de clases del pack especificado
+-- END; 
+-- Crea o reemplaza la función
+CREATE OR REPLACE FUNCTION armonia.obtener_cantidad_clases_pack(p_alumno_id INT, p_pack_id INT) -- Agrega el nuevo parámetro
+RETURNS INT AS $$
 
--- Inscripciones para Piano (clase_id 1)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 1, '2024-09-15', '2024-12-15', 4),
-(2, 1, '2024-09-15', '2024-12-15', 4),
-(3, 1, '2024-09-15', '2024-12-15', 4),
-(4, 1, '2024-09-15', '2024-12-15', 4),
-(5, 1, '2024-09-15', '2024-12-15', 4);
+DECLARE
+    cantidad_clases INT; -- Declara una variable para almacenar el resultado
+BEGIN
+    -- Realiza la consulta para contar las clases del pack especificado para el alumno
+    SELECT 
+        COUNT(CASE WHEN pk.id = p_pack_id THEN c.id END) AS cantidad_clases_pack -- Cuenta las clases del pack especificado
+    INTO cantidad_clases -- Almacena el resultado en la variable
+    FROM armonia.alumno a -- Selecciona de la tabla de alumnos
+    LEFT JOIN armonia.inscripcion ins ON a.id = ins.alumno_id -- Une con la tabla de inscripciones
+    LEFT JOIN armonia.clase c ON ins.clase_id = c.id -- Une con la tabla de clases
+    LEFT JOIN armonia.instrumento_nivel inl ON c.instrumento_nivel_id = inl.id -- Une con los niveles de instrumentos
+    LEFT JOIN armonia.instrumento i ON inl.instrumento_id = i.id -- Une con la tabla de instrumentos
+    LEFT JOIN armonia.nivel n ON inl.nivel_id = n.id -- Une con la tabla de niveles
+    LEFT JOIN armonia.profesor_instrumento pi ON c.profesor_instrumento_id = pi.id -- Une con la tabla de profesores
+    LEFT JOIN armonia.profesor p ON pi.profesor_id = p.id -- Une con la tabla de profesores
+    LEFT JOIN armonia.pack pk ON i.pack_id = pk.id -- Une con la tabla de packs de instrumentos
+    WHERE a.id = p_alumno_id -- Filtra por el ID del alumno proporcionado
+    GROUP BY a.id; -- Agrupa por el ID del alumno para la agregación
+    
+    RETURN cantidad_clases; -- Devuelve la cantidad de clases del pack especificado
+END; $$ LANGUAGE plpgsql;
 
--- Inscripciones para Guitarra (clase_id 2)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 2, '2024-09-15', '2024-12-15', 4),
-(7, 2, '2024-09-15', '2024-12-15', 4),
-(8, 2, '2024-09-15', '2024-12-15', 4),
-(9, 2, '2024-09-15', '2024-12-15', 4),
-(10, 2, '2024-09-15', '2024-12-15', 4);
 
--- Inscripciones para Batería (clase_id 3)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(11, 3, '2024-09-15', '2024-12-15', 4),
-(12, 3, '2024-09-15', '2024-12-15', 4),
-(13, 3, '2024-09-15', '2024-12-15', 4),
-(14, 3, '2024-09-15', '2024-12-15', 4),
-(15, 3, '2024-09-15', '2024-12-15', 4);
+-- --------------------------- funcion para modificar total_mes de alumnos -------------------------- --
 
--- Inscripciones para Violín (clase_id 4)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(16, 4, '2024-09-15', '2024-12-15', 4),
-(17, 4, '2024-09-15', '2024-12-15', 4),
-(18, 4, '2024-09-15', '2024-12-15', 4),
-(19, 4, '2024-09-15', '2024-12-15', 4),
-(20, 4, '2024-09-15', '2024-12-15', 4);
+CREATE OR REPLACE FUNCTION armonia.modificar_total_mes(p_alumno_id INT)
+RETURNS VOID AS $$
+DECLARE
+    v_total_con_descuento NUMERIC;
+BEGIN
+    -- Calcular el total con descuento para el alumno
+    SELECT 
+        COALESCE(SUM(p.precio * (1 - d.porcentaje::float / 100)), 0)
+    INTO 
+        v_total_con_descuento
+    FROM 
+        armonia.inscripcion i
+    JOIN 
+        armonia.clase c ON i.clase_id = c.id
+    JOIN 
+        armonia.vista_clase_info vci ON c.id = vci.clase_id
+    JOIN 
+        armonia.pack p ON vci.pack_id = p.id
+    JOIN 
+        armonia.descuento d ON i.descuento_id = d.id
+    WHERE 
+        i.alumno_id = p_alumno_id;
 
--- Clase vacía (clase_id 5)
+    -- Actualizar la columna total_mes en la tabla alumno
+    UPDATE armonia.alumno
+    SET total_mes = v_total_con_descuento
+    WHERE id = p_alumno_id;
 
--- Inscripciones para Canto (clase_id 6)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 6, '2024-09-15', '2024-12-15', 4),
-(2, 6, '2024-09-15', '2024-12-15', 4),
-(3, 6, '2024-09-15', '2024-12-15', 4),
-(4, 6, '2024-09-15', '2024-12-15', 4),
-(5, 6, '2024-09-15', '2024-12-15', 4);
+    -- Registrar un mensaje (opcional, para depuración)
+    RAISE NOTICE 'Total actualizado para el alumno %: %', p_alumno_id, v_total_con_descuento;
+END;
+$$ LANGUAGE plpgsql;
 
--- Clase vacía (clase_id 7)
 
--- Clase vacía (clase_id 8)
+-- Ejecutar para actualizar todos los registros
 
--- Inscripciones para Flauta (clase_id 9)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 9, '2024-09-15', '2024-12-15', 4),
-(7, 9, '2024-09-15', '2024-12-15', 4),
-(8, 9, '2024-09-15', '2024-12-15', 4),
-(9, 9, '2024-09-15', '2024-12-15', 4),
-(10, 9, '2024-09-15', '2024-12-15', 4);
+-- DO $$
+-- DECLARE
+--     alumno_record RECORD;
+-- BEGIN
+--     FOR alumno_record IN SELECT id FROM armonia.alumno
+--     LOOP
+--         PERFORM armonia.modificar_total_mes(alumno_record.id);
+--     END LOOP;
+-- END $$;
 
--- Clase vacía (clase_id 10)
+-- SELECT * FROM armonia.alumno
 
--- Inscripciones para Saxofón (clase_id 11)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 11, '2024-09-15', '2024-12-15', 4),
-(2, 11, '2024-09-15', '2024-12-15', 4),
-(3, 11, '2024-09-15', '2024-12-15', 4),
-(4, 11, '2024-09-15', '2024-12-15', 4),
-(5, 11, '2024-09-15', '2024-12-15', 4);
 
--- Inscripciones para Clarinete (clase_id 12)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 12, '2024-09-15', '2024-12-15', 4),
-(7, 12, '2024-09-15', '2024-12-15', 4),
-(8, 12, '2024-09-15', '2024-12-15', 4),
-(9, 12, '2024-09-15', '2024-12-15', 4),
-(10, 12, '2024-09-15', '2024-12-15', 4);
+-- --------------------------- funcion para inscribir alumnos -------------------------- --
 
--- Inscripciones para Bajo (clase_id 13)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 13, '2024-09-15', '2024-12-15', 4),
-(2, 13, '2024-09-15', '2024-12-15', 4),
-(3, 13, '2024-09-15', '2024-12-15', 4),
-(4, 13, '2024-09-15', '2024-12-15', 4),
-(5, 13, '2024-09-15', '2024-12-15', 4);
+CREATE OR REPLACE FUNCTION armonia.inscribir_alumno(
+    p_alumno_id INT,
+    p_clase_id INT,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE
+) 
+RETURNS VOID AS $$
+DECLARE
+    pack_id INT; -- Variable para almacenar el ID del pack
+    cantidad_clases INT; -- Variable para contar clases del pack
+    descuento_id INT; -- Variable para el ID del descuento
+BEGIN
+    -- Obtener el ID del pack al que pertenece la clase
+    SELECT i.pack_id INTO pack_id
+    FROM armonia.instrumento_nivel inl
+    JOIN armonia.clase c ON inl.id = c.instrumento_nivel_id
+    JOIN armonia.instrumento i ON inl.instrumento_id = i.id
+    WHERE c.id = p_clase_id;
 
--- Clase vacía (clase_id 14)
+    -- Verificar cuántas clases del pack tiene el alumno
+    cantidad_clases := armonia.obtener_cantidad_clases_pack(p_alumno_id, pack_id);
 
--- Inscripciones para Percusión (clase_id 15)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 15, '2024-09-15', '2024-12-15', 4),
-(7, 15, '2024-09-15', '2024-12-15', 4),
-(8, 15, '2024-09-15', '2024-12-15', 4),
-(9, 15, '2024-09-15', '2024-12-15', 4),
-(10, 15, '2024-09-15', '2024-12-15', 4);
+    -- Definir el descuento según la cantidad de clases
+    IF cantidad_clases >= 2 THEN
+        descuento_id := 3; -- Descuento por dos o más clases
+    ELSIF cantidad_clases = 1 THEN
+        descuento_id := 2; -- Descuento por una clase
+    ELSE
+        descuento_id := 4; -- Asignar descuento 0 por defecto 
+    END IF;
 
--- Clase vacía (clase_id 16)
+    -- Insertar la nueva inscripción
+    INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
+    VALUES (p_alumno_id, p_clase_id, p_fecha_inicio, p_fecha_fin, descuento_id);
 
--- Inscripciones para otro instrumento (clase_id 17)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 17, '2024-09-15', '2024-12-15', 4),
-(2, 17, '2024-09-15', '2024-12-15', 4),
-(3, 17, '2024-09-15', '2024-12-15', 4),
-(4, 17, '2024-09-15', '2024-12-15', 4),
-(5, 17, '2024-09-15', '2024-12-15', 4);
+	PERFORM armonia.modificar_total_mes(p_alumno_id);
 
--- Inscripciones para otro instrumento (clase_id 18)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 18, '2024-09-15', '2024-12-15', 4),
-(7, 18, '2024-09-15', '2024-12-15', 4),
-(8, 18, '2024-09-15', '2024-12-15', 4),
-(9, 18, '2024-09-15', '2024-12-15', 4),
-(10, 18, '2024-09-15', '2024-12-15', 4);
 
--- Inscripciones para otro instrumento (clase_id 19)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 19, '2024-09-15', '2024-12-15', 4),
-(2, 19, '2024-09-15', '2024-12-15', 4),
-(3, 19, '2024-09-15', '2024-12-15', 4),
-(4, 19, '2024-09-15', '2024-12-15', 4),
-(5, 19, '2024-09-15', '2024-12-15', 4);
+END; $$ LANGUAGE plpgsql;
 
--- Inscripciones para otro instrumento (clase_id 20)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 20, '2024-09-15', '2024-12-15', 4),
-(7, 20, '2024-09-15', '2024-12-15', 4),
-(8, 20, '2024-09-15', '2024-12-15', 4),
-(9, 20, '2024-09-15', '2024-12-15', 4),
-(10, 20, '2024-09-15', '2024-12-15', 4);
+SELECT armonia.inscribir_alumno(1, 1, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(2, 14, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(3, 8, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(4, 19, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(5, 22, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(6, 5, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(7, 17, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(8, 9, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(9, 21, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(10, 3, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(11, 26, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(12, 1, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(13, 15, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(14, 30, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(15, 28, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(16, 7, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(17, 4, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(18, 6, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(19, 12, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(20, 33, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(1, 16, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(2, 32, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(3, 10, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(4, 24, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(5, 18, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(6, 35, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(7, 13, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(8, 31, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(9, 25, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(10, 29, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(11, 20, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(12, 27, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(13, 23, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(14, 34, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(15, 2, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(16, 36, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(17, 6, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(18, 10, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(19, 14, '2024-09-01', '2024-12-12');
+SELECT armonia.inscribir_alumno(20, 3, '2024-09-01', '2024-12-12');
 
--- Inscripciones para otro instrumento (clase_id 21)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 21, '2024-09-15', '2024-12-15', 4),
-(2, 21, '2024-09-15', '2024-12-15', 4),
-(3, 21, '2024-09-15', '2024-12-15', 4),
-(4, 21, '2024-09-15', '2024-12-15', 4),
-(5, 21, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 22)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 22, '2024-09-15', '2024-12-15', 4),
-(7, 22, '2024-09-15', '2024-12-15', 4),
-(8, 22, '2024-09-15', '2024-12-15', 4),
-(9, 22, '2024-09-15', '2024-12-15', 4),
-(10, 22, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 23)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 23, '2024-09-15', '2024-12-15', 4),
-(2, 23, '2024-09-15', '2024-12-15', 4),
-(3, 23, '2024-09-15', '2024-12-15', 4),
-(4, 23, '2024-09-15', '2024-12-15', 4),
-(5, 23, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 24)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 24, '2024-09-15', '2024-12-15', 4),
-(7, 24, '2024-09-15', '2024-12-15', 4),
-(8, 24, '2024-09-15', '2024-12-15', 4),
-(9, 24, '2024-09-15', '2024-12-15', 4),
-(10, 24, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 25)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 25, '2024-09-15', '2024-12-15', 4),
-(2, 25, '2024-09-15', '2024-12-15', 4),
-(3, 25, '2024-09-15', '2024-12-15', 4),
-(4, 25, '2024-09-15', '2024-12-15', 4),
-(5, 25, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 26)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 26, '2024-09-15', '2024-12-15', 4),
-(7, 26, '2024-09-15', '2024-12-15', 4),
-(8, 26, '2024-09-15', '2024-12-15', 4),
-(9, 26, '2024-09-15', '2024-12-15', 4),
-(10, 26, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 27)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 27, '2024-09-15', '2024-12-15', 4),
-(2, 27, '2024-09-15', '2024-12-15', 4),
-(3, 27, '2024-09-15', '2024-12-15', 4),
-(4, 27, '2024-09-15', '2024-12-15', 4),
-(5, 27, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 28)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 28, '2024-09-15', '2024-12-15', 4),
-(7, 28, '2024-09-15', '2024-12-15', 4),
-(8, 28, '2024-09-15', '2024-12-15', 4),
-(9, 28, '2024-09-15', '2024-12-15', 4),
-(10, 28, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 29)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 29, '2024-09-15', '2024-12-15', 4),
-(2, 29, '2024-09-15', '2024-12-15', 4),
-(3, 29, '2024-09-15', '2024-12-15', 4),
-(4, 29, '2024-09-15', '2024-12-15', 4),
-(5, 29, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 30)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 30, '2024-09-15', '2024-12-15', 4),
-(7, 30, '2024-09-15', '2024-12-15', 4),
-(8, 30, '2024-09-15', '2024-12-15', 4),
-(9, 30, '2024-09-15', '2024-12-15', 4),
-(10, 30, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 31)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 31, '2024-09-15', '2024-12-15', 4),
-(2, 31, '2024-09-15', '2024-12-15', 4),
-(3, 31, '2024-09-15', '2024-12-15', 4),
-(4, 31, '2024-09-15', '2024-12-15', 4),
-(5, 31, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 32)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 32, '2024-09-15', '2024-12-15', 4),
-(7, 32, '2024-09-15', '2024-12-15', 4),
-(8, 32, '2024-09-15', '2024-12-15', 4),
-(9, 32, '2024-09-15', '2024-12-15', 4),
-(10, 32, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 33)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 33, '2024-09-15', '2024-12-15', 4),
-(2, 33, '2024-09-15', '2024-12-15', 4),
-(3, 33, '2024-09-15', '2024-12-15', 4),
-(4, 33, '2024-09-15', '2024-12-15', 4),
-(5, 33, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 34)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 34, '2024-09-15', '2024-12-15', 4),
-(7, 34, '2024-09-15', '2024-12-15', 4),
-(8, 34, '2024-09-15', '2024-12-15', 4),
-(9, 34, '2024-09-15', '2024-12-15', 4),
-(10, 34, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 35)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(1, 35, '2024-09-15', '2024-12-15', 4),
-(2, 35, '2024-09-15', '2024-12-15', 4),
-(3, 35, '2024-09-15', '2024-12-15', 4),
-(4, 35, '2024-09-15', '2024-12-15', 4),
-(5, 35, '2024-09-15', '2024-12-15', 4);
-
--- Inscripciones para otro instrumento (clase_id 36)
-INSERT INTO armonia.inscripcion (alumno_id, clase_id, fecha_inicio, fecha_fin, descuento_id)
-VALUES
-(6, 36, '2024-09-15', '2024-12-15', 4),
-(7, 36, '2024-09-15', '2024-12-15', 4),
-(8, 36, '2024-09-15', '2024-12-15', 4),
-(9, 36, '2024-09-15', '2024-12-15', 4),
-(10, 36, '2024-09-15', '2024-12-15', 4);
-
-SELECT * FROM armonia.inscripcion;
+-- SELECT *
+-- FROM armonia.inscripcion AS inscripcion
+-- JOIN armonia.vista_clase_info AS vista ON vista.clase_id = inscripcion.clase_id
+-- WHERE inscripcion.alumno_id = 1;
 
 -- ----------------------------- Comprobar que se hayan insertado los datos correctamente ----------------------------- --
 SELECT * FROM armonia.pack;
@@ -666,50 +568,106 @@ COPY (SELECT * FROM armonia.vista_alumnos_por_clase) TO '/mnt/data/vista_alumnos
 -- Seleccionar todos los datos de la vista vista_alumnos_por_clase
 SELECT * FROM armonia.vista_alumnos_por_clase;
 
+
+-- -----------------------------  Crear la vista vista_asistencia_alumnos ----------------------------- --
+
+DROP VIEW IF EXISTS armonia.vista_asistencia_alumnos;
+CREATE OR REPLACE VIEW armonia.vista_asistencia_alumnos AS
+SELECT 
+    CONCAT(a.nombre,' ', a.apellido) AS alumno,
+    COUNT(CASE WHEN pk.id = 1 THEN c.id END) AS cantidad_clases_sin_pack,
+    COUNT(CASE WHEN pk.id = 2 THEN c.id END) AS cantidad_clases_pack_A,
+    COUNT(CASE WHEN pk.id = 3 THEN c.id END) AS cantidad_clases_pack_B,
+    COUNT(CASE WHEN pk.id = 4 THEN c.id END) AS cantidad_clases_pack_C,
+    COUNT(c.id) AS total_clases
+FROM armonia.alumno a
+LEFT JOIN armonia.inscripcion ins ON a.id = ins.alumno_id
+LEFT JOIN armonia.clase c ON ins.clase_id = c.id
+LEFT JOIN armonia.instrumento_nivel inl ON c.instrumento_nivel_id = inl.id
+LEFT JOIN armonia.instrumento i ON inl.instrumento_id = i.id
+LEFT JOIN armonia.nivel n ON inl.nivel_id = n.id
+LEFT JOIN armonia.profesor_instrumento pi ON c.profesor_instrumento_id = pi.id
+LEFT JOIN armonia.profesor p ON pi.profesor_id = p.id
+LEFT JOIN armonia.pack pk ON i.pack_id = pk.id -- Asumiendo que el pack está relacionado con el instrumento
+-- WHERE a.id = 1
+GROUP BY a.id
+ORDER BY a.id;
+
+-- Exportar los datos de la vista a un archivo CSV
+COPY (SELECT * FROM armonia.vista_asistencia_alumnos) TO '/mnt/data/vista_asistencia_alumnos.csv' WITH (FORMAT CSV, HEADER);
+
+SELECT * FROM armonia.vista_asistencia_alumnos;
+
+
+-- -----------------------------  Crear la vista vista_clase_info ----------------------------- --
+
+CREATE VIEW armonia.vista_clase_info AS
+SELECT 
+    c.id AS clase_id, 
+    CONCAT(i.instrumento, ' - ', n.nivel) AS instrumento_nivel,
+    i.pack_id,
+    p.pack AS nombre_pack,
+    p.precio AS precio_clase    
+FROM 
+    armonia.clase c
+JOIN 
+    armonia.instrumento_nivel in_nivel ON c.instrumento_nivel_id = in_nivel.id
+JOIN 
+    armonia.instrumento i ON in_nivel.instrumento_id = i.id
+JOIN 
+    armonia.nivel n ON in_nivel.nivel_id = n.id
+JOIN 
+    armonia.pack p ON i.pack_id = p.id;
+
+-- Exportar los datos de la vista a un archivo CSV
+COPY (SELECT * FROM armonia.vista_clase_info) TO '/mnt/data/vista_clase_info.csv' WITH (FORMAT CSV, HEADER);
+
+SELECT * FROM armonia.vista_clase_info;
+
 -- ----------------------------- Creamos Roles y Usuarios -- ----------------------------- --
 
--- Crear un rol llamado administrator
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'administrator') THEN
-        CREATE ROLE administrator;
-    END IF;
-END $$;
+-- -- Crear un rol llamado administrator
+-- DO $$
+-- BEGIN
+--     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'administrator') THEN
+--         CREATE ROLE administrator;
+--     END IF;
+-- END $$;
 
 
--- Conceder permiso de conexión a la base de datos 'armonia' para el rol administrator
-GRANT CONNECT ON DATABASE armonia TO administrator;
+-- -- Conceder permiso de conexión a la base de datos 'armonia' para el rol administrator
+-- GRANT CONNECT ON DATABASE armonia TO administrator;
 
--- Conceder uso del esquema 'armonia' al rol administrator
-GRANT USAGE ON SCHEMA armonia TO administrator;
+-- -- Conceder uso del esquema 'armonia' al rol administrator
+-- GRANT USAGE ON SCHEMA armonia TO administrator;
 
--- Conceder permisos de SELECT, INSERT, UPDATE y DELETE en todas las tablas del esquema 'armonia' al rol administrator
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA armonia TO administrator;
+-- -- Conceder permisos de SELECT, INSERT, UPDATE y DELETE en todas las tablas del esquema 'armonia' al rol administrator
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA armonia TO administrator;
 
--- Alterar los privilegios predeterminados para que el rol administrator tenga permisos de SELECT, INSERT, UPDATE y DELETE en nuevas tablas
-ALTER DEFAULT PRIVILEGES IN SCHEMA armonia GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO administrator;
+-- -- Alterar los privilegios predeterminados para que el rol administrator tenga permisos de SELECT, INSERT, UPDATE y DELETE en nuevas tablas
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA armonia GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO administrator;
 
--- Conceder uso de todas las secuencias en el esquema 'armonia' al rol administrator
-GRANT USAGE ON ALL SEQUENCES IN SCHEMA armonia TO administrator; -- Las secuencias en bases de datos son objetos que generan números únicos y secuenciales. Se utilizan comúnmente para crear identificadores únicos para filas en tablas, especialmente para columnas de tipo clave primaria.
+-- -- Conceder uso de todas las secuencias en el esquema 'armonia' al rol administrator
+-- GRANT USAGE ON ALL SEQUENCES IN SCHEMA armonia TO administrator; -- Las secuencias en bases de datos son objetos que generan números únicos y secuenciales. Se utilizan comúnmente para crear identificadores únicos para filas en tablas, especialmente para columnas de tipo clave primaria.
 
--- Alterar los privilegios predeterminados para que el rol administrator tenga permisos de USAGE en nuevas secuencias
-ALTER DEFAULT PRIVILEGES IN SCHEMA armonia GRANT USAGE ON SEQUENCES TO administrator;
+-- -- Alterar los privilegios predeterminados para que el rol administrator tenga permisos de USAGE en nuevas secuencias
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA armonia GRANT USAGE ON SEQUENCES TO administrator;
 
--- Crear un usuario llamado admin_user con una contraseña
-CREATE USER admin_user WITH LOGIN PASSWORD '1234';
+-- -- Crear un usuario llamado admin_user con una contraseña
+-- CREATE USER admin_user WITH LOGIN PASSWORD '1234';
 
--- Conceder el rol administrator al usuario admin_user
-GRANT administrator TO admin_user;
+-- -- Conceder el rol administrator al usuario admin_user
+-- GRANT administrator TO admin_user;
 
--- Consultar los roles existentes y sus miembros, excluyendo roles del sistema
-SELECT
-    r.rolname,  -- Nombre del rol
-    ARRAY(SELECT b.rolname  -- Array de nombres de roles a los que pertenece
-          FROM pg_catalog.pg_auth_members m
-          JOIN pg_catalog.pg_roles b ON (m.roleid = b.oid)
-          WHERE m.member = r.oid) as memberof
-FROM pg_catalog.pg_roles r
-WHERE r.rolname NOT IN ('pg_signal_backend','rds_iam',
-                         'rds_replication','rds_superuser',
-                         'rdsadmin','rdsrepladmin')  -- Excluir roles del sistema
-ORDER BY 1;  -- Ordenar por el nombre del rol
+-- -- Consultar los roles existentes y sus miembros, excluyendo roles del sistema
+-- SELECT
+--     r.rolname,  -- Nombre del rol
+--     ARRAY(SELECT b.rolname  -- Array de nombres de roles a los que pertenece
+--           FROM pg_catalog.pg_auth_members m
+--           JOIN pg_catalog.pg_roles b ON (m.roleid = b.oid)
+--           WHERE m.member = r.oid) as memberof
+-- FROM pg_catalog.pg_roles r
+-- WHERE r.rolname NOT IN ('pg_signal_backend','rds_iam',
+--                          'rds_replication','rds_superuser',
+--                          'rdsadmin','rdsrepladmin')  -- Excluir roles del sistema
+-- ORDER BY 1;  -- Ordenar por el nombre del rol
