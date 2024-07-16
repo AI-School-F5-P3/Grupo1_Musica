@@ -58,7 +58,7 @@ async def ver_alumno_route(
 
 # Borrar alumno
 
-@app.delete("alumnos/borrar")
+@app.delete("/alumnos/borrar")
 async def borrar_alumno_route(
     alumno_nombre: str,
     alumno_apellidos: str,
@@ -76,7 +76,7 @@ async def crear_profesor_route(
     return await crud.crear_profesor(db, profesor)
 
 # Actualizar datos de profesor
-@app.put("profesores/update", response_model=schemas.ProfesorResponse)
+@app.put("/profesores/update", response_model=schemas.ProfesorResponse)
 async def update_profesor_route(
     profesor_nombre: str,
     profesor: schemas.ActualizarProfesor,
@@ -106,21 +106,21 @@ async def buscar_profesor_route(
 
 @app.put("/precios/update")
 async def actualizar_precios_route(
-    pack_id: int,
+    pack_name: str,
     pack: schemas.ActualizarPrecio,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_precios(db, pack_id, pack)
+    return await crud.actualizar_precios(db, pack_name, pack)
 
 # Actualizar descuentos
 
 @app.put("/descuentos/update")
 async def actualizar_descuentos_route(
-    descuento_id: int,
+    descuento_desc: str,
     descuento: schemas.ActualizarDescuento,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_descuentos(db, descuento_id, descuento)
+    return await crud.actualizar_descuentos(db, descuento_desc, descuento)
 
 # Ver precios
 

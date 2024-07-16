@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from GUI_screens import change_screen
 from API_calls_get import get_alumnos
+from API_calls_put import update_alumno
 
 def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
@@ -79,9 +80,13 @@ def screen_actualizar_alumno():
 
     st.markdown("""<h2 style="text-align: center;">Nueva inscripcion de alumno</h2>""", unsafe_allow_html=True)
 
-    st.text_input("Nombre del alumno")
+    nombre = st.text_input("Nombre del alumno")
 
-    st.text_input("Apellidos del alumno")
+    apellidos = st.text_input("Apellidos del alumno")
+
+    nuevo_nombre = st.text_input("Nuevo nombre del alumno")
+
+    nuevos_apellidos = st.text_input("Nuevos apellidos del alumno")
 
     age = st.number_input("Edad del alumno", value = 6, min_value = 6, max_value = 100, step = 1)
 
@@ -89,9 +94,25 @@ def screen_actualizar_alumno():
 
     email = st.text_input("Correo electrónico")
 
-    familiy = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
+    family = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
 
-    enviar = st.button("Registrar", type = "primary")
+    data = {
+        "nombre": nuevo_nombre,
+        "apellido": nuevos_apellidos,
+        "edad": age,
+        "telefono": tfn_number,
+        "correo": email,
+        "familiar": True if family == "Si" else False,
+        "total_mes": 0
+    }
+
+    if  st.button("Actualizar datos", type = "primary"):
+        result = update_alumno(nombre, apellidos, data)
+        if result:
+            st.success("Datos actaulizados correctamente")
+        else:
+            st.error("Hubo un error actualizando los datos.")
+
 
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')

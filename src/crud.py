@@ -138,7 +138,7 @@ async def actualizar_alumno(
 ) -> models.Alumno:
     result = await db.execute(
         select(models.Alumno).where(
-            models.Alumno.id == nombre,
+            models.Alumno.nombre == nombre,
             models.Alumno.apellido == apellidos)
         )
     existing_alumno = result.scalars().first()
@@ -253,7 +253,7 @@ async def update_profesor(
 )-> models.Profesor:
     result = await db.execute(
         select(models.Profesor).where(
-            models.Profesor.nombre == profesor_nombre)
+            models.Profesor.profesor == profesor_nombre)
         )
     existing_profesor = result.scalars().first()
 
@@ -328,10 +328,11 @@ async def borrar_profesor(
 
 async def actualizar_precios(
     db: AsyncSession,
-    pack_id: int,
+    pack_name: str,
     pack: schemas.ActualizarPrecio
 ) -> models.Pack: 
-    result = await db.execute(select(models.Pack),filter(models.Pack.id == pack_id))
+
+    result = await db.execute(select(models.Pack).filter(models.Pack.pack == pack_name))
     pack_existente = result.scalars().first()
 
     if not pack_existente:
@@ -347,19 +348,20 @@ async def actualizar_precios(
     except SQLAlchemyError:
         await db.rollback()
         raise HTTPException(status_code=500, detail="No se pudo actualizar el precio")
+    return pack_existente
         
 # Actualizar descuentos
 
 async def actualizar_descuentos(
     db: AsyncSession,
-    descuento_id: int,
+    descuento_desc: str,
     descuento: schemas.ActualizarDescuento
 ) -> models.Descuento:
-    result = await db.execute(select(models.Descuento).filter(models.Descuento.id == descuento_id))
+    result = await db.execute(select(models.Descuento).filter(models.Descuento.descripcion == descuento_desc))
     descuento_existente = result.scalars().first()
 
     if not descuento_existente:
-        raise HTTPException(status_code=404, detail = "Id de descuento no encontrado")
+        raise HTTPException(status_code=404, detail = "Tipo de descuento no encontrado")
     
     update_data = descuento.model_dump()
     for key, value in update_data.items():
@@ -371,6 +373,8 @@ async def actualizar_descuentos(
     except SQLAlchemyError:
         await db.rollback()
         raise HTTPException(status_code= 500, detail = "No se pudo actualizar el descuento")
+    
+    return descuento_existente
         
 # Comprobar precios
 

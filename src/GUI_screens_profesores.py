@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from GUI_screens import change_screen
 from API_calls_get import get_profesores
+from API_calls_put import update_profesor
 
 def screen_nuevo_profesor():
     trumpet = "\U0001f3ba"
@@ -29,9 +30,19 @@ def screen_actualizar_profesor():
 
     nombre = st.text_input("Nombre del profesor")
 
-    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+    nuevo_nombre = st.text_input("Nuevo nombre del profesor")
 
-    st.button('Enviar', type = "primary")
+    data = {
+        "profesor": nuevo_nombre
+    }
+
+    if st.button('Actualizar', type = "primary"):
+        result = update_profesor(nombre, data)
+        if result:
+            st.success("Datos actualizados correctamente")
+        else:
+            st.error("Hubo un error actualizando los datos.")
+
     if st.button('Atrás', type = "primary"):
         change_screen('screen_profesores')
         st.rerun()
