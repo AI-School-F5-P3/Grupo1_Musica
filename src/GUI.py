@@ -48,8 +48,55 @@ custom_html = """
     }
 </style>
 """
+
+def apply_custom_css():
+    st.markdown("""
+        <style>
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .stButton button {
+            width: 220px;
+            height: 60px;
+            background-color: #6943ff; /* Purple background */
+            color: white; /* Text color */
+            border: 1px solid #5227ff; /* Border color */
+            border-radius: 8px;
+            font-size: 18px; /* Font size */
+            margin: 5px;
+        }
+        .stButton button:hover {
+            background-color: #5e3fe0; /* Darker purple on hover */
+        }
+        /* Streamlit dark theme inspired by Shades of Purple */
+        body {
+            background-color: #2d2a55; /* Dark purple background */
+            color: #e0e0e0; /* Light text */
+        }
+        .stMarkdown {
+            color: #e0e0e0; /* Light text */
+        }
+        .css-18ni7ap, .css-1d391kg {
+            background-color: #2d2a55; /* Dark purple background */
+            color: #e0e0e0; /* Light text */
+        }
+        .css-1d391kg p {
+            color: #e0e0e0; /* Light text */
+        }
+        .css-1v0mbdj a {
+            color: #ff9d00; /* Link color */
+        }
+        .css-1v0mbdj a:hover {
+            color: #ff9900; /* Link hover color */
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 # Display the custom HTML
 st.components.v1.html(custom_html)
+apply_custom_css()
 
 # Renderización del login
 if not st.session_state.logged_in:
