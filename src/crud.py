@@ -5,46 +5,53 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import and_
 from datetime import date
 from fastapi import HTTPException
+from logger import logger
 import models
 import schemas
 
-# Crear alumnos / alumno nuevo
+# Crear nuevo alumno
 
 async def crear_alumno(
     db: AsyncSession,
-    alumno: schemas.Crear_Alumno,
+    alumno: schemas.Crear_Alumno, # Esquema de respuesta esperada
     nombre_instrumento: str,
     nombre_profesor: str,
     nombre_nivel: str
 ) -> models.Alumno:
 
     try:
-        # Verificar que exista el instrumento
+        # Verificar que exista el instrumento en la tabla instrumentos
         query_instrumento = select(models.Instrumento).where(models.Instrumento.instrumento == nombre_instrumento)
         instrumento_result = await db.execute(query_instrumento)
         instrumento = instrumento_result.scalar_one_or_none()
 
         if not instrumento:
+            logger.error("No se encuentra el instrumento en la base de datos")
             raise HTTPException(status_code=404, detail="Instrumento no encontrado")
 
-        # Verificar que exista el profesor
+            
+
+        # Verificar que exista el profesor en la tabla profesor
         query_profesor = select(models.Profesor).where(models.Profesor.profesor == nombre_profesor)
         profesor_result = await db.execute(query_profesor)
         profesor = profesor_result.scalar_one_or_none()
 
         if not profesor:
+            logger.error("No se encuentra el profesor en la base de datos")
             raise HTTPException(status_code=404, detail="Profesor no encontrado")
 
-        # Verificar que exista el nivel
+        # Verificar que exista el nivel en la tabla nivel
         query_nivel = select(models.Nivel).where(models.Nivel.nivel == nombre_nivel)
         nivel_result = await db.execute(query_nivel)
         nivel = nivel_result.scalar_one_or_none()
 
         if not nivel:
+            logger.error("No se encuentra el nivel en la base de datos")
             raise HTTPException(status_code=404, detail="Nivel no encontrado")
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("Error de sqlalchemy, no se pueden verificar los datos")
         raise HTTPException(status_code=500, detail=f"Error al verificar datos: {str(e)}")
 
     try:
@@ -57,6 +64,7 @@ async def crear_alumno(
         profesor_instrumento = profesor_instrumento_result.scalar_one_or_none()
 
         if not profesor_instrumento:
+            logger.error("No se encuentra la relacion entre profesor e instrumento")
             raise HTTPException(status_code=404, detail="Relación Profesor-Instrumento no encontrada")
 
         # Verificar relaciones en Instrumento_Nivel
@@ -68,6 +76,7 @@ async def crear_alumno(
         instrumento_nivel = instrumento_nivel_result.scalar_one_or_none()
 
         if not instrumento_nivel:
+            logger.error("No se encuentra la relacion entre instrumento y nivel")
             raise HTTPException(status_code=404, detail="Relación Instrumento-Nivel no encontrada")
 
         # Verificar la existencia de la clase
@@ -81,10 +90,12 @@ async def crear_alumno(
         clase = clase_result.scalar_one_or_none()
 
         if not clase:
+            logger.error("No se encuentra la clase de nivel e instrumento")
             raise HTTPException(status_code=404, detail="Clase no encontrada")
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("Error en la verificación de relaciones")
         raise HTTPException(status_code=500, detail=f"Error al verificar relaciones y clase: {str(e)}")
 
     try:
@@ -99,6 +110,7 @@ async def crear_alumno(
         )
 
         db.add(nuevo_alumno)
+        logger.info("Se añade un nuevo alumno a la tabla")
         await db.flush()  # Esto asegura que nuevo_alumno obtenga un ID antes de usarlo en la inscripción
 
         # Obtener el ID del descuento "Sin descuento"
@@ -107,6 +119,7 @@ async def crear_alumno(
         descuento = descuento_result.scalar_one_or_none()
 
         if not descuento:
+            logger.error("No se encuentra el descuento 4")
             raise HTTPException(status_code=500, detail="No se encontró el descuento 'Sin descuento' en la base de datos")
 
         alumno_inscripcion = models.Inscripcion(
@@ -118,11 +131,13 @@ async def crear_alumno(
         )
 
         db.add(alumno_inscripcion)
+        logger.info("Se añade una nueva inscripción a la tabla")
         await db.commit()
         await db.refresh(nuevo_alumno)
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("Error al crear un alumno nuevo")
         raise HTTPException(status_code=500, detail=f"No se pudo crear alumno nuevo: {str(e)}")
 
     return nuevo_alumno
@@ -137,32 +152,36 @@ async def crear_inscripcion(
     nombre_nivel:str
 )-> models.Inscripcion:
     try:
-        # Verificar que exista el instrumento
+        # Verificar que exista el instrumento en la tabla
         query_instrumento = select(models.Instrumento).where(models.Instrumento.instrumento == nombre_instrumento)
         instrumento_result = await db.execute(query_instrumento)
         instrumento = instrumento_result.scalars().first()
 
         if not instrumento:
+            logger.error("No se encuentra el instrumento")
             raise HTTPException(status_code=404, detail="Instrumento no encontrado")
 
-        # Verificar que exista el profesor
+        # Verificar que exista el profesor en la tabla
         query_profesor = select(models.Profesor).where(models.Profesor.profesor == nombre_profesor)
         profesor_result = await db.execute(query_profesor)
         profesor = profesor_result.scalars().first()
 
         if not profesor:
+            logger.error("No se encuentra el profesor")
             raise HTTPException(status_code=404, detail="Profesor no encontrado")
 
-        # Verificar que exista el nivel
+        # Verificar que exista el nivel en la tabla
         query_nivel = select(models.Nivel).where(models.Nivel.nivel == nombre_nivel)
         nivel_result = await db.execute(query_nivel)
         nivel = nivel_result.scalars().first()
 
         if not nivel:
+            logger.error("No se encuentra el nivel")
             raise HTTPException(status_code=404, detail="Nivel no encontrado")
     
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("Error SQLAlchemy no se pueden verificar los datos")
         raise HTTPException(status_code=500, detail=f"Error al verificar datos: {str(e)}")
         
     try:
@@ -175,6 +194,7 @@ async def crear_inscripcion(
         profesor_instrumento = profesor_instrumento_result.scalar_one_or_none()
 
         if not profesor_instrumento:
+            logger.error("No se encuentra la relación entre profesor e instrumento")
             raise HTTPException(status_code=404, detail="Relación Profesor-Instrumento no encontrada")
 
         # Verificar relaciones en Instrumento_Nivel
@@ -186,6 +206,7 @@ async def crear_inscripcion(
         instrumento_nivel = instrumento_nivel_result.scalar_one_or_none()
 
         if not instrumento_nivel:
+            logger.error("No se encuentra la relación entre instrumento y nivel")
             raise HTTPException(status_code=404, detail="Relación Instrumento-Nivel no encontrada")
 
         # Verificar la existencia de la clase
@@ -199,10 +220,12 @@ async def crear_inscripcion(
         clase = clase_result.scalar_one_or_none()
 
         if not clase:
+            logger.error("No se encuentra la clase en la tabla")
             raise HTTPException(status_code=404, detail="Clase no encontrada")
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("Error SQLAlchemy no pueden verificarse las relaciones y clase")
         raise HTTPException(status_code=500, detail=f"Error al verificar relaciones y clase: {str(e)}")
 
     try:
@@ -217,6 +240,7 @@ async def crear_inscripcion(
         alumno = alumno_result.scalar_one_or_none()
 
         if not alumno:
+            logger.error("No se encuentra el alumno")
             raise HTTPException(status_code=404, detail="Alumno no encontrado")
         
         #Verificar descuento
@@ -225,10 +249,12 @@ async def crear_inscripcion(
         descuento = descuento_result.scalar_one_or_none()
 
         if not descuento:
+            logger.error("No se encuentra el descuento 4")
             raise HTTPException(status_code=500, detail="No se encontró el descuento 'Sin descuento' en la base de datos")
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("Error SQLAlchemy al verificar datos")
         raise HTTPException(status_code=500, detail=f"Error al verificar datos: {str(e)}")
     try:
         alumno_inscripcion = models.Inscripcion(
@@ -240,11 +266,13 @@ async def crear_inscripcion(
         )
 
         db.add(alumno_inscripcion)
+        logger.info('Se añade una nueva inscripción a la base de datos')
         await db.commit()
         await db.refresh(alumno_inscripcion)
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error("No se pudo crear el alumno nuevo")
         raise HTTPException(status_code=500, detail=f"No se pudo crear alumno nuevo: {str(e)}")
 
     return {"mensaje":"exito"}
@@ -265,6 +293,7 @@ async def actualizar_alumno(
     existing_alumno = result.scalars().first()
 
     if not existing_alumno:
+        logger.error("Alumno no encontrado")
         raise HTTPException(status_code=404, detail="Alumno no encontrado")
 
     # Actualizar los campos del alumno
@@ -274,9 +303,11 @@ async def actualizar_alumno(
 
     try:
         await db.commit()
+        logger.info(f'Se actualizan los datos del alumno{nombre}, {apellidos}')
         await db.refresh(existing_alumno)
     except SQLAlchemyError:
         await db.rollback()
+        logger.error("No se pueden actualizar los datos")
         raise HTTPException(status_code=500, detail="No se pudo actualizar el alumno")
     
     return existing_alumno
@@ -315,6 +346,7 @@ async def ver_alumno(
     alumno = result.scalars().first()
 
     if not alumno:
+        logger.error(f"No se encuentra el alumno {alumno_nombre}")
         raise HTTPException(status_code=404, detail='Alumno no encontrado')
     
     return alumno
@@ -335,18 +367,23 @@ async def borrar_alumno(
             )
             alumno = result.scalar_one()
         except NoResultFound:
+            logger.error(f"No se encuentra el alumno {alumno_nombre}")
             raise HTTPException(status_code=404, detail="Alumno no encontrado")
         except MultipleResultsFound:
+            logger.error(f"Se encontraron multiples resultados para el alumno {alumno_nombre}")
             raise HTTPException(status_code=500, detail="Se encontraron múltiples resultados para el alumno")
         except SQLAlchemyError as e:
             await db.rollback()
+            logger.error("Error en la base de datos")
             raise HTTPException(status_code=500, detail=f"Error de base de datos: {str(e)}")
         
         try:
             await db.delete(alumno)
+            logger.info(f'Alumno {alumno_nombre} eliminado correctamente')
             await db.commit()
         except SQLAlchemyError as e:
             await db.rollback()
+            logger.error(f'No se pudo borrar al alumno {alumno_nombre}')
             raise HTTPException(status_code=500, detail=f"No se pudo borrar al alumno: {str(e)}")
     
         return {"mensaje":"exito"}
@@ -363,11 +400,13 @@ async def crear_profesor(
         profesor_existente = result.scalar_one_or_none()
 
         if profesor_existente:
+            logger.error(f'El profesor {profesor} ya existe')
             raise HTTPException(status_code=400, detail="El profesor ya existe")
 
         # Crear el nuevo profesor
         nuevo_profesor = models.Profesor(profesor=profesor.profesor)
         db.add(nuevo_profesor)
+        logger.info(f'Se añade el profesor {profesor}')
         await db.commit()
         await db.refresh(nuevo_profesor)
 
@@ -392,6 +431,7 @@ async def crear_profesor(
                     instrumento_id=instrumento_obj.id
                 )
                 db.add(nuevo_instrumento)
+                logger.info(f'Se añade la relación entre profesor e instrumentos')
 
         await db.commit()
 
@@ -400,6 +440,7 @@ async def crear_profesor(
 
     except SQLAlchemyError as e:
         await db.rollback()
+        logger.error(f"Error al crear el profesor {profesor}")
         raise HTTPException(status_code=500, detail=f"Error al crear profesor: {str(e)}")
 
     return schemas.ProfesorResponse(
@@ -411,6 +452,7 @@ async def crear_profesor(
         instrumento4=profesor.instrumento4,
         instrumento5=profesor.instrumento5
     )
+
 # Actualizar profesor
 
 async def update_profesor(
@@ -425,6 +467,7 @@ async def update_profesor(
     existing_profesor = result.scalars().first()
 
     if not existing_profesor:
+        logger.error(f'No se encuentra al profesor {profesor_nombre}')
         raise HTTPException(status_code=404, detail="Profesor no encontrado")
 
     # Actualizar los campos del profesor
@@ -435,8 +478,10 @@ async def update_profesor(
     try:
         await db.commit()
         await db.refresh(existing_profesor)
+        logger.info(f'Se actualizan los datos del profesor {profesor_nombre}')
     except SQLAlchemyError:
         await db.rollback()
+        logger.error(f'No se pudo actualizar al profesor {profesor_nombre}')
         raise HTTPException(status_code=500, detail="No se pudo actualizar al profesor")
     
     return {"mensaje":"exito"}
@@ -455,6 +500,7 @@ async def buscar_profesor(
     profesor = result.scalars().first()
 
     if profesor is None:
+        logger.error(f'{nombre_profesor} no encontrado')
         raise HTTPException(status_code=404, detail="Profesor no encontrado")
     
     # Formatear la respuesta para incluir el nombre del instrumento
@@ -465,6 +511,8 @@ async def buscar_profesor(
             for pi in profesor.profesor_instrumentos
         ]
     }
+
+    logger.info(f'Recuperados datos del profesor {nombre_profesor}')
     
     return profesor_data
 
@@ -480,6 +528,7 @@ async def borrar_profesor(
         profesor = result.scalars().first()
         
         if not profesor:
+            logger.error(f'Profesor {profesor_name} no encontrado')
             raise HTTPException(status_code=404, detail="Profesor no encontrado")
         
         await db.delete(profesor)
@@ -488,9 +537,11 @@ async def borrar_profesor(
             await db.commit()
         except SQLAlchemyError:
             await db.rollback()
+            logger.error(f'No se pudo borrar al profesor {profesor_name}')
             raise HTTPException(status_code=500, detail="No se pudo borrar el profesor")
     
         return {"mensaje": "Exito"}
+    
 # Actualizar precios
 
 async def actualizar_precios(
@@ -503,6 +554,7 @@ async def actualizar_precios(
     pack_existente = result.scalars().first()
 
     if not pack_existente:
+        logger.error(f'No se encuentra el pack {pack_name}')
         raise HTTPException(status_code = 404, detail = "Pack no encontrado")
     
     update_data = pack.model_dump()
@@ -511,9 +563,11 @@ async def actualizar_precios(
 
     try:
         await db.commit()
+        logger.info(f'Precio de {pack_name} actualizado')
         await db.refresh(pack_existente)
     except SQLAlchemyError:
         await db.rollback()
+        logger.error(f"No se pudo actualizar el precio de {pack_name}")
         raise HTTPException(status_code=500, detail="No se pudo actualizar el precio")
     return pack_existente
         
@@ -528,6 +582,7 @@ async def actualizar_descuentos(
     descuento_existente = result.scalars().first()
 
     if not descuento_existente:
+        logger.error(f"Tipo de descuento {descuento_desc} no encontrado")
         raise HTTPException(status_code=404, detail = "Tipo de descuento no encontrado")
     
     update_data = descuento.model_dump()
@@ -536,9 +591,11 @@ async def actualizar_descuentos(
 
     try:
         await db.commit()
+        logger.info(f'Descuento de {descuento_desc} actualizado correctamente')
         await db.refresh(descuento_existente)
     except SQLAlchemyError:
         await db.rollback()
+        logger.error(f"No se pudo actualizar el descuento de {descuento_desc}")
         raise HTTPException(status_code= 500, detail = "No se pudo actualizar el descuento")
     
     return descuento_existente
@@ -553,8 +610,10 @@ async def ver_precios(
     pack_existente = result.scalars().first()
 
     if not pack_existente:
+        logger.error(f'No se encuentra el pack {pack_name}')
         raise HTTPException(status_code=404, detail = "Pack no encontrado")
     
+    logger.info(f'Revisado precio de {pack_name}')
     return pack_existente
 
 # Comprobar descuentos
@@ -567,6 +626,8 @@ async def ver_descuentos(
     descuento_existente = result.scalars().first()
 
     if not descuento_existente:
+        logger.error(f"Tipo de descuento {descuento_descripcion} no encontrado")
         raise HTTPException(status_code=404, detail = "Descripción de descuento no encontrado")
     
+    logger.info(f'Revisado descuento de {descuento_descripcion}')
     return descuento_existente
