@@ -1,9 +1,5 @@
 # Escuela de música Armonía
 
-### Introducción
-
-...
-
 ### 1. Instalación
 
 Clonamos el repositorio
@@ -11,7 +7,6 @@ Clonamos el repositorio
     git clone https://github.com/AI-School-F5-P3/Grupo1_Musica.git
 
 ### Windows
-
 
 Navegamos hasta el directorio principal y creamos un entorno virtual
     
@@ -37,55 +32,29 @@ Configurar las variables de entorno en el archivo .env en el directorio raíz de
 
 En estas variables de entorno debemos especificar el nombre de usuario que tengamos en postgreSQL y la contraseña, además del nombre de la base de datos, que en nuestro caso hemos optado por llamar "Armonia" pero que también es modificable.
 
-Para cargar las variables de entorno desde el archivo load_env.ps1:
+Una vez definimos las variables de entorno, nos movemos a la carpeta Docker. En esta carpeta están las instrucciones para levantar un contenedor docker que construye la base de datos en PostgreSQL que vamos a utilizar. Para construirlo usaremos los comandos en terminal:
 
-En powershell de windows abrir la carpeta config:
+    docker-compose build
+    docker-compose up
 
-    cd "C:\Documentos\Grupo1_Musica\config
+Una vez el docker este configurado y funcionando, debemos conectar la base de datos a nuestro postgres local, para ello podemos añadirlo en PgAdmin, registrando un nuevo servidor, con el nombre que queramos y en la pestaña conexiones los parámetros:
+- Host name/address: localhost
+- Port: 5433
+- username: admin_user (o usuario del archivo .env)
+- password: 1234 (o password del archivo .env)
+
+También puede usarse el comando (asumiendo que tenemos psql en las variables de entorno de nuestra máquina):
     
-    .\load_env.ps1
+    psql -h localhost -p 5433 -U postgres -a armonia
 
-Puede producirse un error de que no tenemos permiso para ejecutar scripts desde powershell, si se quiere modificar ejecutar el comando (Decisión personal):
+Cuando esté conectada la base de datos, podemos lanzar la api ejecutando el script 'main.py' dentro de /src/. Para inicar streamlit y disponer de una interfaz gráfica más amigable ejecutar el código:
 
-    Set-ExecutionPolicy Unrestricted
+    streamlit run src/GUI.py
 
-<!-- Una vez se han cargado las variables de entorno, generamos la base de datos con el comando:
-
-    createdb -U postgres -W armonia
-
-Y a continuación ejecutar el script
-
-    psql -U $env:DB_USER -d $env:DB_NAME -f "C:\Documentos\Grupo1_Musica\db\init.sql" -->
-
-IMPORTANTE
-
-Recordad actualizar las rutas de los archivos a las que se correspondan en vuestros ordenadores personales.
 
 ### macOS/Linux
 
 Instalacion para sistemas operativos macOS/linux
-
-Navegamos hasta el directorio principal y creamos un entorno virtual
-
-    python3 -m venv venv
-
-Activar el entorno virtual:
-
-    source venv/bin/activate
-
-Ejecutamos el siguiente comando para descargar las dependencias
-
-    pip install -r requirements.txt   
-
-Configurar las variables de entorno en el archivo .env en el directorio raíz del proyecto (Grupo1_Musica):
-
-    DATABASE_URL=postgres://tu_usuario:tu_contraseña@localhost/nombre_basedatos
-    DB_HOST=localhost
-    DB_USER=tu_usuario
-    DB_PASS=tu_contraseña
-    DB_NAME=nombre_basedatos
-    SECRET_KEY=password_server
-    DEBUG=true
 
 Ejecutar el script SQL:
 
