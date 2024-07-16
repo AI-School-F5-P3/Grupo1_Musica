@@ -40,17 +40,16 @@ async def crear_alumno_route(
     return await crud.crear_alumno(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
 
 # Crear alumno / alumno existente
-
-# Actualizar datos de alumno
-
-@app.put("/alumnos/update", response_model=schemas.AlumnoResponse)
-async def actualizar_alumno_route(
-    alumno_nombre: str,
-    alumno_apellidos:str, 
-    alumno: schemas.ActualizarAlumno, 
+@app.post("/alumnos/crear_inscripcion")
+async def crear_inscripcion_route(
+    alumno: schemas.Crear_Inscripcion,
+    nombre_instrumento: str,
+    nombre_profesor:str,
+    nombre_nivel: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_alumno(db, alumno_nombre, alumno_apellidos, alumno)
+    return await crud.crear_inscripcion(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
+
 
 # Get alumno por nombre y apellidos
 

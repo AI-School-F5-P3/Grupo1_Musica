@@ -12,7 +12,6 @@ def create_alumno(instrumento, profesor, nivel, data):
         'Content-Type': 'application/json'
     }
 
-
     try:
         response = requests.post(full_url, headers=headers, json=data)
 
@@ -29,6 +28,41 @@ def create_alumno(instrumento, profesor, nivel, data):
         # Capturar excepciones de requests
         print(f'Error en la solicitud HTTP: {e}')
         return False
+    
+def create_inscripcion(nombre_instrumento, nombre_profesor, nombre_nivel, data):
+    base_url = 'http://127.0.0.1:8000'
+    endpoint = '/alumnos/crear_inscripcion'
+
+    # Construir la URL completa
+    full_url = f'{base_url}{endpoint}?nombre_instrumento={nombre_instrumento}&nombre_profesor={nombre_profesor}&nombre_nivel={nombre_nivel}'
+
+    # Encabezados de la solicitud HTTP
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        # Realizar la solicitud POST con los datos en el cuerpo JSON
+        response = requests.post(full_url, headers=headers, json=data)
+
+        # Verificar el estado de la respuesta
+        response.raise_for_status()  # Lanzará una excepción si hay un error HTTP
+
+        if response.status_code == 200:
+            return True
+        else:
+            # Ocurrió un error inesperado
+            print(f'Error al hacer la solicitud: {response.status_code}')
+            return None
+    except requests.exceptions.HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')  # Manejar errores HTTP específicos
+        return None
+    except requests.exceptions.RequestException as e:
+        # Capturar excepciones generales de requests
+        print(f'Request error occurred: {e}')
+        return None
+
 
 def create_profesor(profesor, instrumento1, instrumento2=None, instrumento3=None, instrumento4=None, instrumento5=None):
     base_url = 'http://127.0.0.1:8000/profesores/crear'

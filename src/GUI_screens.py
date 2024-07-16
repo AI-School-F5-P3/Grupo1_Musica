@@ -10,7 +10,7 @@ def home_screen():
 
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
-    st.markdown("""<h2 style="text-align: center;">Bienenido/a a la página de gestión de su base de datos.</h2>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style="text-align: center;">Bienvenido/a a la página de gestión de su base de datos.</h2>""", unsafe_allow_html=True)
 
 def screen_alumnos():
     trumpet = "\U0001f3ba"
@@ -33,6 +33,10 @@ def screen_alumnos():
     with col3:
         if st.button("Nuevo Alumno", type = "primary"):
             change_screen('screen_nuevo_alumno')
+            st.rerun()
+
+        if st.button("Nueva inscripción de alumno existente", type = "primary"):
+            change_screen('screen_nueva_inscripcion')
             st.rerun()
 
         if st.button("Actualizar datos de alumno", type = "primary"):

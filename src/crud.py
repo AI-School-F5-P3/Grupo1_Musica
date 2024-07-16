@@ -3,7 +3,7 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound, MultipleResultsFound
 from sqlalchemy.orm import joinedload
 from sqlalchemy import and_
-import datetime
+from datetime import date
 from fastapi import HTTPException
 import models
 import schemas
@@ -112,7 +112,7 @@ async def crear_alumno(
         alumno_inscripcion = models.Inscripcion(
             alumno_id=nuevo_alumno.id,
             clase_id=clase.id,
-            fecha_inicio=datetime.date.today(),
+            fecha_inicio=date.today(),
             fecha_fin=None,
             descuento_id=descuento.id  # Asignar el ID del descuento "Sin descuento"
         )
@@ -127,7 +127,128 @@ async def crear_alumno(
 
     return nuevo_alumno
 
-# Crear alumno / alumno existente
+#Crear nueva inscripcion
+
+async def crear_inscripcion(
+    db: AsyncSession,
+    inscripcion: schemas.Crear_Inscripcion,
+    nombre_instrumento:str,
+    nombre_profesor:str,
+    nombre_nivel:str
+)-> models.Inscripcion:
+    try:
+        # Verificar que exista el instrumento
+        query_instrumento = select(models.Instrumento).where(models.Instrumento.instrumento == nombre_instrumento)
+        instrumento_result = await db.execute(query_instrumento)
+        instrumento = instrumento_result.scalars().first()
+
+        if not instrumento:
+            raise HTTPException(status_code=404, detail="Instrumento no encontrado")
+
+        # Verificar que exista el profesor
+        query_profesor = select(models.Profesor).where(models.Profesor.profesor == nombre_profesor)
+        profesor_result = await db.execute(query_profesor)
+        profesor = profesor_result.scalars().first()
+
+        if not profesor:
+            raise HTTPException(status_code=404, detail="Profesor no encontrado")
+
+        # Verificar que exista el nivel
+        query_nivel = select(models.Nivel).where(models.Nivel.nivel == nombre_nivel)
+        nivel_result = await db.execute(query_nivel)
+        nivel = nivel_result.scalars().first()
+
+        if not nivel:
+            raise HTTPException(status_code=404, detail="Nivel no encontrado")
+    
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al verificar datos: {str(e)}")
+        
+    try:
+        # Verificar relaciones en Profesor_Instrumento
+        query_profesor_instrumento = select(models.Profesor_Instrumento).where(
+            models.Profesor_Instrumento.instrumento_id == instrumento.id,
+            models.Profesor_Instrumento.profesor_id == profesor.id
+        )
+        profesor_instrumento_result = await db.execute(query_profesor_instrumento)
+        profesor_instrumento = profesor_instrumento_result.scalar_one_or_none()
+
+        if not profesor_instrumento:
+            raise HTTPException(status_code=404, detail="Relación Profesor-Instrumento no encontrada")
+
+        # Verificar relaciones en Instrumento_Nivel
+        query_instrumento_nivel = select(models.Instrumento_Nivel).where(
+            models.Instrumento_Nivel.instrumento_id == instrumento.id,
+            models.Instrumento_Nivel.nivel_id == nivel.id
+        )
+        instrumento_nivel_result = await db.execute(query_instrumento_nivel)
+        instrumento_nivel = instrumento_nivel_result.scalar_one_or_none()
+
+        if not instrumento_nivel:
+            raise HTTPException(status_code=404, detail="Relación Instrumento-Nivel no encontrada")
+
+        # Verificar la existencia de la clase
+        query_clase = select(models.Clase).where(
+            and_(
+                models.Clase.instrumento_nivel_id == instrumento_nivel.id,
+                models.Clase.profesor_instrumento_id == profesor_instrumento.id
+            )
+        )
+        clase_result = await db.execute(query_clase)
+        clase = clase_result.scalar_one_or_none()
+
+        if not clase:
+            raise HTTPException(status_code=404, detail="Clase no encontrada")
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al verificar relaciones y clase: {str(e)}")
+
+    try:
+        # Verificar la existencia del alumno
+        query_alumno = select(models.Alumno).where(
+            and_(
+                models.Alumno.nombre == inscripcion.nombre,
+                models.Alumno.apellido == inscripcion.apellido
+            )
+        )
+        alumno_result = await db.execute(query_alumno)
+        alumno = alumno_result.scalar_one_or_none()
+
+        if not alumno:
+            raise HTTPException(status_code=404, detail="Alumno no encontrado")
+        
+        #Verificar descuento
+        query_descuento = select(models.Descuento).where(models.Descuento.descripcion == 'Sin descuento')
+        descuento_result = await db.execute(query_descuento)
+        descuento = descuento_result.scalar_one_or_none()
+
+        if not descuento:
+            raise HTTPException(status_code=500, detail="No se encontró el descuento 'Sin descuento' en la base de datos")
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al verificar datos: {str(e)}")
+    try:
+        alumno_inscripcion = models.Inscripcion(
+            alumno_id=alumno.id,
+            clase_id=clase.id,
+            fecha_inicio=date.today(),
+            fecha_fin=None,
+            descuento_id=descuento.id  # Asignar el ID del descuento "Sin descuento"
+        )
+
+        db.add(alumno_inscripcion)
+        await db.commit()
+        await db.refresh(alumno_inscripcion)
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"No se pudo crear alumno nuevo: {str(e)}")
+
+    return {"mensaje":"exito"}
+
 
 # Actualizar datos de alumno
 async def actualizar_alumno(

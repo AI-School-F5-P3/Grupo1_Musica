@@ -4,7 +4,7 @@ from GUI_screens import change_screen
 from API_calls_get import get_alumnos
 from API_calls_put import update_alumno
 from API_calls_delete import borrar_alumno
-from API_calls_post import create_alumno
+from API_calls_post import create_alumno, create_inscripcion
 
 def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
@@ -28,13 +28,13 @@ def screen_nuevo_alumno():
 
     family_bool = True if family == 'Si' else False
 
-    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
+    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxofón", "Canto"])
     
     if instrumento == 'Piano':
         options = ["Mar", "Flor", "Álvaro", "Marifé", "Nayara"]
     elif instrumento == 'Guitarra':
         options = ["Mar", "Flor"]
-    elif instrumento == 'Bateria':
+    elif instrumento == 'Batería':
         options = ["Mar"]
     elif instrumento == 'Violin':
         options = ["Nayara"]
@@ -43,7 +43,7 @@ def screen_nuevo_alumno():
     elif instrumento == 'Flauta':
         options = ["Mar"]
     elif instrumento == 'Saxofón':
-        options = ["Nives"]
+        options = ["Nieves"]
     elif instrumento == 'Clarinete':
         options = ['Nieves']
     elif instrumento == 'Percusion':
@@ -58,14 +58,14 @@ def screen_nuevo_alumno():
         options = ["Cero", "Iniciación", "Medio", "Avanzado"]
     elif instrumento == 'Guitarra':
         options = ["Iniciación", "Medio"]
-    elif instrumento == 'Bateria':
+    elif instrumento == 'Batería':
         options = ["Iniciación", "Medio", "Avanzado"]
     elif instrumento == 'Flauta':
         options = ["Iniciación", "Medio"]
     elif instrumento == 'Bajo':
         options = ["Iniciación", "Medio"]
     else:
-        options = ["No aplica"]
+        options = ["Iniciación"]
 
     nivel = st.selectbox("Nivel: ", options = options)
 
@@ -90,6 +90,74 @@ def screen_nuevo_alumno():
         change_screen('screen_alumnos')
         st.rerun()
 
+def screen_nueva_inscripcion():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Nueva inscripción de alumno</h2>""", unsafe_allow_html=True)
+
+    nombre = st.text_input("Nombre del alumno")
+    apellido = st.text_input("Apellido del alumno")
+
+    instrumento = st.selectbox("Instrumento", options=["Flauta", "Piano", "Guitarra", "Saxofón", "Canto"])
+    
+    if instrumento == 'Piano':
+        options = ["Mar", "Flor", "Álvaro", "Marifé", "Nayara"]
+    elif instrumento == 'Guitarra':
+        options = ["Mar", "Flor"]
+    elif instrumento == 'Batería':
+        options = ["Mar"]
+    elif instrumento == 'Violín':
+        options = ["Nayara"]
+    elif instrumento == 'Canto':
+        options = ["Marifé"]
+    elif instrumento == 'Flauta':
+        options = ["Mar"]
+    elif instrumento == 'Saxofón':
+        options = ["Nieves"]
+    elif instrumento == 'Clarinete':
+        options = ['Nieves']
+    elif instrumento == 'Percusión':
+        options = ['Sofía']
+    else:
+        options = ["Nayara"]
+
+    profesor = st.selectbox("Profesor", options=options)
+
+    if instrumento == 'Piano':
+        options = ["Cero", "Iniciación", "Medio", "Avanzado"]
+    elif instrumento == 'Guitarra':
+        options = ["Iniciación", "Medio"]
+    elif instrumento == 'Batería':
+        options = ["Iniciación", "Medio", "Avanzado"]
+    elif instrumento == 'Flauta':
+        options = ["Iniciación", "Medio"]
+    elif instrumento == 'Bajo':
+        options = ["Iniciación", "Medio"]
+    else:
+        options = ["Iniciación"]
+
+    nivel = st.selectbox("Nivel", options=options)
+
+    if nombre and apellido:  # Verificar que se haya ingresado nombre y apellido
+        data = {
+            "nombre": nombre,
+            "apellido": apellido
+        }
+        if st.button("Mostrar datos", type = "primary"):
+            st.write(data)
+
+        if st.button("Registrar", type="primary"):
+            result = create_inscripcion(instrumento, profesor, nivel, data)
+            if result:
+                st.success("Alumno registrado correctamente.")
+            else:
+                st.error("Hubo un error registrando los datos.")
+    else:
+        st.warning("Por favor, ingresa el nombre y apellido del alumno.")
+
 
 def screen_actualizar_alumno():
     trumpet = "\U0001f3ba"
@@ -97,7 +165,7 @@ def screen_actualizar_alumno():
 
     st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
 
-    st.markdown("""<h2 style="text-align: center;">Nueva inscripcion de alumno</h2>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style="text-align: center;">Actualización de alumno</h2>""", unsafe_allow_html=True)
 
     nombre = st.text_input("Nombre del alumno")
 
@@ -136,7 +204,7 @@ def screen_actualizar_alumno():
     if  st.button("Actualizar datos", type = "primary"):
         result = update_alumno(nombre, apellidos, data)
         if result:
-            st.success("Datos actaulizados correctamente")
+            st.success("Datos actualizados correctamente")
         else:
             st.error("Hubo un error actualizando los datos.")
 

@@ -53,6 +53,15 @@ class AlumnoResponse(BaseModel):
         orm_mode = True
         from_attributes = True
 
+class Crear_Inscripcion(BaseModel):
+    nombre:str
+    apellido:str
+
+class InscripcionResponse(BaseModel):
+    id:int
+    nombre:str
+    apellidos:str
+
 class ActualizarAlumno(BaseModel):
     nombre: Optional[str] = None
     apellido: Optional[str] = None
