@@ -1,6 +1,12 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+'''
+Se incluyen en este archivo los esquemas que representan como se deben formatear las peticiones y las respuestas de los diferentes endpoints de la API.
+Response define las respuestas. Delete define endpoints de DELETE, Create define las creaciones con POST, etc.
+'''
+
+
 class ProfesorCreate(BaseModel):
     profesor: str
     instrumento1: str

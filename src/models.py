@@ -2,6 +2,10 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date, Float
 from sqlalchemy.orm import relationship
 from database import Base
 
+'''
+Se incluyen en este archivo las clases que representan las tablas incluidas en la base de datos, asignando su tipo de dato, las relaciones entre otras tabla, las llaves primarias y las llaves foraneas.
+'''
+
 class Alumno(Base):
     __tablename__ = 'alumno'
     __table_args__ = {'schema': 'armonia'}
