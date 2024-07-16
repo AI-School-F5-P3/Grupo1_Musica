@@ -127,6 +127,13 @@ async def borrar_alumno_route(
 ):
     return await crud.borrar_alumno(db, alumno_nombre, alumno_apellidos)
 
+#Endpoitn GET para recuperar todos los alumnos de la escuela
+
+@app.get("/alumnos/all/", tags = ['Alumnos'])
+async def ver_todos_alumnos_route(
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.ver_todos_alumnos(db)
 
 # Endpoint POST para crear un profesor nuevo
 
@@ -165,6 +172,12 @@ async def buscar_profesor_route(
     db: AsyncSession = Depends(get_db)
 ):
     return await crud.buscar_profesor(db, nombre)
+
+@app.get("/profesores/all", response_model = list[dict], tags = ['Profesores'])
+async def get_profesores(
+    db: AsyncSession = Depends(get_db)
+):
+        return await crud.buscar_todos_profesores(db)
 
 # Endpoint PUT para actualizar precios de los packs
 

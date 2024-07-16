@@ -141,3 +141,32 @@ def get_descuentos(descripcion):
         # Ocurrió un error
         logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
+
+
+def get_all_alumnos():
+    base_url = 'http://127.0.0.1:8000/alumnos/all'
+
+    response = requests.get(base_url)
+    if response.status_code == 200:
+        data = response.json()
+        df = pd.DataFrame(data)
+        return data, df
+    else:
+        # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
+        print(f'Error al hacer la solicitud: {response.status_code}')
+
+
+def get_all_profesores():
+    base_url = 'http://127.0.0.1:8000/profesores/all'
+
+    response = requests.get(base_url)
+    if response.status_code == 200:
+        data = response.json()
+        df = pd.DataFrame(data)
+        return data, df
+    else:
+        # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
+        print(f'Error al hacer la solicitud: {response.status_code}')
+

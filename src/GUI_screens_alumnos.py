@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from GUI_screens import change_screen
-from API_calls_get import get_alumnos
+from API_calls_get import get_alumnos, get_all_alumnos
 from API_calls_put import update_alumno
 from API_calls_delete import borrar_alumno
 from API_calls_post import create_alumno, create_inscripcion
@@ -271,3 +271,24 @@ def screen_get_alumno():
         change_screen('screen_alumnos')
         st.rerun()
 
+def screen_get_all_alumnos():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Consultar todos los registros de alumnos</h2>""", unsafe_allow_html=True)
+
+    if st.button("Get CSV"):
+        data, df = get_all_alumnos()
+        logger.info(f'Obtenidos datos de Alumnos en CSV a través de Streamlit')
+        st.write(df)
+    
+    if st.button("Get JSON"):
+        data, df = get_all_alumnos()
+        logger.info(f'Obtenidos datos de Alumnos en JSON a través de Streamlit')
+        st.write(data)
+    
+
+    if st.button("Atras"):
+        change_screen('screen_alumnos')
+        st.rerun()

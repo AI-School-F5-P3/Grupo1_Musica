@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from GUI_screens import change_screen
-from API_calls_get import get_profesores
+from API_calls_get import get_profesores, get_all_profesores
 from API_calls_put import update_profesor
 from API_calls_delete import borrar_profesor
 from API_calls_post import create_profesor
@@ -130,5 +130,27 @@ def screen_get_profesor():
         st.write(data)
 
     if st.button('Atrás', type = "primary"):
+        change_screen('screen_profesores')
+        st.rerun()
+
+def screen_get_all_profesores():
+    trumpet = "\U0001f3ba"
+    sax = "\U0001f3b7"
+    st.markdown(f"""<h1 style="text-align: center;"> {trumpet} {sax} Escuela Armonía {sax}{trumpet} </h1>""", unsafe_allow_html=True)
+
+    st.markdown("""<h2 style="text-align: center;">Consultar todos los registros de profesores</h2>""", unsafe_allow_html=True)
+
+    if st.button("Get CSV"):
+        data, df = get_all_profesores()
+        logger.info(f'Obtenidos datos de Profesores en CSV a través de Streamlit')
+        st.write(df)
+    
+    if st.button("Get JSON"):
+        data, df = get_all_profesores()
+        logger.info(f'Obtenidos datos de Profesores en JSON a través de Streamlit')
+        st.write(data)
+    
+
+    if st.button("Atras"):
         change_screen('screen_profesores')
         st.rerun()

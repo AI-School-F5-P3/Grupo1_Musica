@@ -387,6 +387,30 @@ async def borrar_alumno(
             raise HTTPException(status_code=500, detail=f"No se pudo borrar al alumno: {str(e)}")
     
         return {"mensaje":"exito"}
+
+# Recuperar todos los alumnos
+
+async def ver_todos_alumnos(db: AsyncSession):
+    try:
+        result = await db.execute(
+            select(models.Alumno)
+        )
+        alumnos = result.scalars().all()
+
+        if not alumnos:
+            logger.warning('No se encontraron alumnos en la base de datos')
+            return []  # Devolver una lista vacía si no se encuentran alumnos
+
+        logger.info('Recuperados datos de todos los alumnos')
+
+        return alumnos
+    
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        logger.error(f'Error al buscar alumnos: {str(e)}')
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
+
 # Crear profesores
 
 async def crear_profesor(
@@ -541,7 +565,38 @@ async def borrar_profesor(
             raise HTTPException(status_code=500, detail="No se pudo borrar el profesor")
     
         return {"mensaje": "Exito"}
+
+#Lista de todos los profesores 
+
+async def buscar_todos_profesores(db: AsyncSession):
+    try:
+        result = await db.execute(
+            select(models.Profesor)
+        )
+        profesores = result.scalars().all()
+
+        if not profesores:
+            logger.warning('No se encontraron profesores en la base de datos')
+            return []  # Devolver una lista vacía si no se encuentran profesores
+
+        # Formatear la respuesta
+        profesores_data = [
+            {
+                "nombre_profesor": profesor.profesor
+            }
+            for profesor in profesores
+        ]
+
+        logger.info('Recuperados datos de todos los profesores')
+
+        return profesores_data
     
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        logger.error(f'Error al buscar profesores: {str(e)}')
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
+
 # Actualizar precios
 
 async def actualizar_precios(

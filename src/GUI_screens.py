@@ -49,6 +49,10 @@ def screen_alumnos():
             change_screen('screen_get_alumno')
             st.rerun()
 
+        if st.button("Consultar todos los alumnos"):
+            change_screen('screen_get_all_alumnos')
+            st.rerun()
+
 def screen_profesores():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
@@ -81,6 +85,10 @@ def screen_profesores():
 
         if st.button("Consultar datos de un profesor"):
             change_screen('screen_get_profesor')
+            st.rerun()
+
+        if st.button("Consultar todos los profesores"):
+            change_screen('screen_get_all_profesores')
             st.rerun()
     
 def screen_precios():
