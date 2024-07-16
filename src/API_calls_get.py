@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from logger import logger
 
 def flatten_json(data, prefix=''):
     result = {}
@@ -45,6 +46,7 @@ def get_alumnos(nombre, apellidos):
         return data, df
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 def get_profesores(nombre):
@@ -82,6 +84,7 @@ def get_profesores(nombre):
         return data, df
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 
@@ -110,6 +113,7 @@ def get_precios(pack):
         return data_list, df
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 
@@ -135,4 +139,5 @@ def get_descuentos(descripcion):
         return data_list, df
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')

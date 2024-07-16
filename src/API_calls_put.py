@@ -1,4 +1,5 @@
 import requests
+from logger import logger
 
 def update_alumno(nombre, apellidos, data):
     url = 'http://127.0.0.1:8000/alumnos/update'
@@ -21,6 +22,7 @@ def update_alumno(nombre, apellidos, data):
         return True
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 def update_profesor(nombre, data):
@@ -44,6 +46,7 @@ def update_profesor(nombre, data):
         return True
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 
@@ -68,6 +71,7 @@ def update_precios(pack, data):
         return True
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 def update_descuentos(descripcion, data):
@@ -91,4 +95,5 @@ def update_descuentos(descripcion, data):
         return True
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')

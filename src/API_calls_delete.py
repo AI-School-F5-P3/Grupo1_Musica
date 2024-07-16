@@ -1,5 +1,5 @@
 import requests
-
+from logger import logger
 
 def borrar_alumno(nombre, apellidos):
     url = 'http://127.0.0.1:8000/alumnos/delete/{nombre}/{apellidos}'.format(
@@ -21,6 +21,7 @@ def borrar_alumno(nombre, apellidos):
         return True
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
         return False
     
@@ -42,5 +43,6 @@ def borrar_profesor(nombre):
         return True
     else:
         # Ocurrió un error
+        logger.error(f'Error al hacer la solicitud: {response.status_code}')
         print(f'Error al hacer la solicitud: {response.status_code}')
         return False    

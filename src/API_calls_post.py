@@ -1,4 +1,5 @@
 import requests
+from logger import logger
 
 def create_alumno(instrumento, profesor, nivel, data):
     base_url = 'http://127.0.0.1:8000/alumnos/crear_nuevo'
@@ -22,10 +23,12 @@ def create_alumno(instrumento, profesor, nivel, data):
             return True
         else:
             # Ocurrió un error
+            logger.error(f'Error al hacer la solicitud: {response.status_code}')
             print(f'Error al hacer la solicitud: {response.status_code}')
             return False
     except requests.exceptions.RequestException as e:
         # Capturar excepciones de requests
+        logger.error(f'Error en la solicitud HTTP: {e}')
         print(f'Error en la solicitud HTTP: {e}')
         return False
     
@@ -53,6 +56,7 @@ def create_inscripcion(nombre_instrumento, nombre_profesor, nombre_nivel, data):
             return True
         else:
             # Ocurrió un error inesperado
+            logger.error(f'Error al hacer la solicitud: {response.status_code}')
             print(f'Error al hacer la solicitud: {response.status_code}')
             return None
     except requests.exceptions.HTTPError as http_err:
@@ -101,6 +105,7 @@ def create_profesor(profesor, instrumento1, instrumento2=None, instrumento3=None
             return response.json()  # Convertir la respuesta JSON a un diccionario Python si es necesario
         else:
             # Ocurrió un error
+            logger.error(f'Error al hacer la solicitud: {response.status_code}')
             print(f'Error al hacer la solicitud: {response.status_code}')
             return None
     except requests.exceptions.RequestException as e:
