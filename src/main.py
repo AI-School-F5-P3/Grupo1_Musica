@@ -51,6 +51,17 @@ async def crear_inscripcion_route(
     return await crud.crear_inscripcion(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
 
 
+# Actulizar alumno
+
+@app.put("/alumnos/update", response_model=schemas.AlumnoResponse)
+async def actualizar_alumno_route(
+    alumno_nombre: str,
+    alumno_apellidos: str,
+    alumno: schemas.ActualizarAlumno,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.actualizar_alumno(db, alumno_nombre, alumno_apellidos, alumno)
+
 # Get alumno por nombre y apellidos
 
 @app.get("/alumnos/get/")
@@ -63,7 +74,7 @@ async def ver_alumno_route(
 
 # Borrar alumno
 
-@app.delete("/alumnos/delete/{alumno_nombre}/{alumno_apellidos}", response_model = schemas.AlumnoResponse)
+@app.delete("/alumnos/delete/{alumno_nombre}/{alumno_apellidos}")
 async def borrar_alumno_route(
     alumno_nombre: str,
     alumno_apellidos: str,
@@ -81,7 +92,7 @@ async def crear_profesor_route(
     return await crud.crear_profesor(db, profesor)
 
 # Actualizar datos de profesor
-@app.put("/profesores/update", response_model=schemas.ProfesorResponse)
+@app.put("/profesores/update")
 async def update_profesor_route(
     profesor_nombre: str,
     profesor: schemas.ActualizarProfesor,

@@ -28,7 +28,7 @@ def screen_nuevo_alumno():
 
     family_bool = True if family == 'Si' else False
 
-    instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxofón", "Canto"])
+    instrumento = st.selectbox("Clase", options = ["Piano", "Guitarra", "Batería", "Violín", "Canto", "Flauta", "Saxofón", "Clarinete", "Percusión", "Bajo"])
     
     if instrumento == 'Piano':
         options = ["Mar", "Flor", "Álvaro", "Marifé", "Nayara"]

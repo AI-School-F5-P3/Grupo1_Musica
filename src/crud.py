@@ -349,8 +349,7 @@ async def borrar_alumno(
             await db.rollback()
             raise HTTPException(status_code=500, detail=f"No se pudo borrar al alumno: {str(e)}")
     
-        return schemas.AlumnoResponse(alumno)
-
+        return {"mensaje":"exito"}
 # Crear profesores
 
 async def crear_profesor(
@@ -440,7 +439,7 @@ async def update_profesor(
         await db.rollback()
         raise HTTPException(status_code=500, detail="No se pudo actualizar al profesor")
     
-    return existing_profesor
+    return {"mensaje":"exito"}
     
 # Recuperar profesor por nombre
 
