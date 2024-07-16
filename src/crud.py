@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, NoResultFound, MultipleResultsFound
 from sqlalchemy.orm import joinedload
 from sqlalchemy import and_
 import datetime
@@ -147,7 +147,7 @@ async def actualizar_alumno(
         raise HTTPException(status_code=404, detail="Alumno no encontrado")
 
     # Actualizar los campos del alumno
-    update_data = alumno.model_dump()
+    update_data = alumno.model_dump(exclude_unset = True)
     for key, value in update_data.items():
         setattr(existing_alumno, key, value)
 
@@ -205,26 +205,30 @@ async def borrar_alumno(
     alumno_apellidos: str
 ):
     async with db.begin():
-        result = await db.execute(
-            select(models.Alumno).filter(
-                models.Alumno.nombre == alumno_nombre,
-                models.Alumno.apellido == alumno_apellidos)
+        try:
+            result = await db.execute(
+                select(models.Alumno).filter(
+                    models.Alumno.nombre == alumno_nombre,
+                    models.Alumno.apellido == alumno_apellidos
+                )
             )
-        alumno = result.scalar_one()
-        
-        if not alumno:
+            alumno = result.scalar_one()
+        except NoResultFound:
             raise HTTPException(status_code=404, detail="Alumno no encontrado")
-        
-        await db.delete(alumno)
+        except MultipleResultsFound:
+            raise HTTPException(status_code=500, detail="Se encontraron múltiples resultados para el alumno")
+        except SQLAlchemyError as e:
+            await db.rollback()
+            raise HTTPException(status_code=500, detail=f"Error de base de datos: {str(e)}")
         
         try:
+            await db.delete(alumno)
             await db.commit()
-        except SQLAlchemyError:
+        except SQLAlchemyError as e:
             await db.rollback()
-            raise HTTPException(status_code=500, detail="No se pudo borrar al alumno")
+            raise HTTPException(status_code=500, detail=f"No se pudo borrar al alumno: {str(e)}")
     
-        return alumno
-
+        return schemas.AlumnoResponse.from_orm(alumno)
 
 # Crear profesores
 

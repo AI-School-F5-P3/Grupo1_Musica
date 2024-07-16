@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 import uvicorn
-from database import SessionLocal, engine, Base
+from database import SessionLocal, engine, Base, init_db
 import schemas
 import crud
 
@@ -20,6 +20,12 @@ app = FastAPI(lifespan=lifespan)
 async def get_db():
     async with SessionLocal() as session:
         yield session
+
+async def on_startup():
+    await init_db()
+
+# Asignar la función de inicialización a los eventos de startup
+app.add_event_handler("startup", on_startup)
 
 # Crear alumno / alumno nuevo
 

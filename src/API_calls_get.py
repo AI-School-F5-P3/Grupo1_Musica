@@ -106,7 +106,8 @@ def get_precios(pack):
     if response.status_code == 200:
         data = response.json()
         data_list = [data]
-        return data_list
+        df = pd.DataFrame(data_list)
+        return data_list, df
     else:
         # Ocurrió un error
         print(f'Error al hacer la solicitud: {response.status_code}')
@@ -130,7 +131,8 @@ def get_descuentos(descripcion):
     if response.status_code == 200:
         data = response.json()
         data_list = [data]
-        return data_list
+        df = pd.DataFrame(data_list)
+        return data_list, df
     else:
         # Ocurrió un error
         print(f'Error al hacer la solicitud: {response.status_code}')

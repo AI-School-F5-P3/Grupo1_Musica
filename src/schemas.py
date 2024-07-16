@@ -19,11 +19,19 @@ class Crear_Alumno(BaseModel):
     familiar: bool
     total_mes: int
 
-class AlumnoResponse(Crear_Alumno):
+class AlumnoResponse(BaseModel):
     id: int
+    nombre: str
+    apellido: str
+    edad: int
+    telefono: str
+    correo: str
+    familiar: bool
+    total_mes: int
 
     class Config:
-        orm_model = True
+        orm_mode = True
+        from_attributes = True
 
 class ActualizarAlumno(BaseModel):
     nombre: Optional[str] = None
@@ -34,14 +42,11 @@ class ActualizarAlumno(BaseModel):
     familiar: Optional[bool] = None
     total_mes: Optional[int] = None
 
-class ClaseBase(BaseModel):
+class ClaseCreate(BaseModel):
     instrumento_nivel_id: int
     profesor_instrumento_id: int
 
-class ClaseCreate(ClaseBase):
-    pass
-
-class Clase(ClaseBase):
+class Clase(ClaseCreate):
     id: int
 
     class Config:
@@ -68,7 +73,7 @@ class ActualizarProfesor(BaseModel):
     profesor: Optional[str] = None
 
 class ActualizarPrecio(BaseModel):
-    precio: Optional[int] = None
+    precio: Optional[float] = None
 
 class ActualizarDescuento(BaseModel):
-    porcentaje: Optional[int] = None
+    porcentaje: Optional[float] = None

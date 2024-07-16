@@ -107,7 +107,7 @@ def screen_actualizar_alumno():
 
     nuevos_apellidos = st.text_input("Nuevos apellidos del alumno")
 
-    age = st.number_input("Edad del alumno", value = 6, min_value = 6, max_value = 100, step = 1)
+    age = st.number_input("Edad del alumno", max_value = 100, step = 1)
 
     tfn_number = st.text_input("Número de teléfono")
 
@@ -117,15 +117,21 @@ def screen_actualizar_alumno():
 
     family_bool = True if family == 'Si' else False
 
-    data = {
-        "nombre": nuevo_nombre,
-        "apellido": nuevos_apellidos,
-        "edad": age,
-        "telefono": tfn_number,
-        "correo": email,
-        "familiar": family_bool,
-        "total_mes": 0
-    }
+    data = {}
+
+    if nuevo_nombre:
+        data["nombre"] = nuevo_nombre
+    if nuevos_apellidos:
+        data["apellido"] = nuevos_apellidos
+    if age and age >= 0:
+        data["edad"] = age
+    if tfn_number:
+        data["telefono"] = tfn_number
+    if email:
+        data["correo"] = email
+    if family:
+        data["familiar"] = family_bool
+    data["total_mes"] = 0
 
     if  st.button("Actualizar datos", type = "primary"):
         result = update_alumno(nombre, apellidos, data)

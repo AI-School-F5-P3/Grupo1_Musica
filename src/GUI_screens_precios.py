@@ -54,10 +54,10 @@ def screen_consultar_precios():
     packs = ['Canto, Percusión', 'Piano, Guitarra, Batería y Flauta', 'Violín y Bajo', 'Clarinete y Saxofón']
     id_pack = st.selectbox("Instrumento a consultar precio", options = packs)
     if st.button('Get CSV', type = 'primary'):
-        data = get_precios(id_pack)
-        st.write(pd.DataFrame(data))
+        data, df = get_precios(id_pack)
+        st.write(df)
     if st.button('Get JSON'):
-        data = get_precios(id_pack)
+        data, df = get_precios(id_pack)
         st.write(data)
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
@@ -71,10 +71,10 @@ def screen_consultar_descuentos():
     descuentos = ["Familiar en la escuela", "Segundo curso del mismo instrumento", "Tercer curso del mismo instrumento", "Sin descuento"]
     id_descuentos = st.selectbox("Id para consultar descuentos", options = descuentos)
     if st.button('Get CSV', type = 'primary'):
-        data = get_descuentos(id_descuentos)
-        st.write(pd.DataFrame(data))
+        data, df = get_descuentos(id_descuentos)
+        st.write(df)
     if st.button('Get JSON', type = 'primary'):
-        data = get_descuentos(id_descuentos)
+        data, df = get_descuentos(id_descuentos)
         st.write(data)
     if st.button('Atrás', type = "primary"):
         change_screen('screen_precios')
