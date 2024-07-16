@@ -16,7 +16,7 @@ def screen_nuevo_profesor():
     nombre = st.text_input("Nombre del profesor")
 
     # Lista de opciones inicial
-    opciones_iniciales = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"]
+    opciones_iniciales = ["Piano", "Guitarra", "Batería", "Violín", "Canto", "Flauta", "Saxofón", "Clarinete", "Percusión", "Bajo"]
 
     # Incluir None en las opciones iniciales
     opciones_iniciales_con_none = ["None"] + opciones_iniciales
