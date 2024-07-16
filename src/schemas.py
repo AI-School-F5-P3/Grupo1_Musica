@@ -3,13 +3,32 @@ from typing import List, Optional
 
 class ProfesorCreate(BaseModel):
     profesor: str
+    instrumento1: str
+    instrumento2: Optional[str] = None
+    instrumento3: Optional[str] = None
+    instrumento4: Optional[str] = None
+    instrumento5: Optional[str] = None
 
-class ProfesorResponse(ProfesorCreate):
+class ProfesorResponse(BaseModel):
     id: int
+    profesor: str
+    instrumento1: str
+    instrumento2: Optional[str] = None
+    instrumento3: Optional[str] = None
+    instrumento4: Optional[str] = None
+    instrumento5: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+class ProfesorDelete(BaseModel):
+    profesor_name: str
 
+class ProfesorDeleteResponse(BaseModel):
+    profesor_name: str
+
+class ProfesorDeleteRequest(BaseModel):
+    profesor_name: str
+
+class ProfesorDeleteResponse(BaseModel):
+    mensaje: str
 
 class Crear_Alumno(BaseModel):
     nombre: str
@@ -20,11 +39,28 @@ class Crear_Alumno(BaseModel):
     familiar: bool
     total_mes: int
 
-class AlumnoResponse(Crear_Alumno):
+class AlumnoResponse(BaseModel):
     id: int
+    nombre: str
+    apellido: str
+    edad: int
+    telefono: str
+    correo: str
+    familiar: bool
+    total_mes: int
 
     class Config:
-        orm_model = True
+        orm_mode = True
+        from_attributes = True
+
+class Crear_Inscripcion(BaseModel):
+    nombre:str
+    apellido:str
+
+class InscripcionResponse(BaseModel):
+    id:int
+    nombre:str
+    apellidos:str
 
 class ActualizarAlumno(BaseModel):
     nombre: Optional[str] = None
@@ -35,14 +71,11 @@ class ActualizarAlumno(BaseModel):
     familiar: Optional[bool] = None
     total_mes: Optional[int] = None
 
-class ClaseBase(BaseModel):
+class ClaseCreate(BaseModel):
     instrumento_nivel_id: int
     profesor_instrumento_id: int
 
-class ClaseCreate(ClaseBase):
-    pass
-
-class Clase(ClaseBase):
+class Clase(ClaseCreate):
     id: int
 
     class Config:
@@ -65,21 +98,12 @@ class Profesor_Instrumento(Profesor_InstrumentoBase):
 class ProfesorBase(BaseModel):
     profesor: str
 
-class ProfesorCreate(ProfesorBase):
-    pass
-
-class Profesor(ProfesorBase):
-    id: int
-    profesor_instrumentos: List[Profesor_Instrumento] = []
-
-    class Config:
-        orm_mode = True
-
 class ActualizarProfesor(BaseModel):
-    nombre: Optional[str] = None
+    profesor: Optional[str] = None
 
 class ActualizarPrecio(BaseModel):
-    precio: Optional[int] = None
+    precio: Optional[float] = None
 
 class ActualizarDescuento(BaseModel):
-    porcentaje: Optional[int] = None
+    porcentaje: Optional[float] = None
+

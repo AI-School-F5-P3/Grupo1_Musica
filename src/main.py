@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 import uvicorn
-from database import SessionLocal, engine, Base
+from database import SessionLocal, engine, Base, init_db
 import schemas
 import crud
 import logging
@@ -48,6 +48,12 @@ async def get_db():
     async with SessionLocal() as session:
         yield session
 
+async def on_startup():
+    await init_db()
+
+# Asignar la función de inicialización a los eventos de startup
+app.add_event_handler("startup", on_startup)
+
 # Crear alumno / alumno nuevo
 
 @app.post("/alumnos/crear_nuevo", response_model=schemas.AlumnoResponse)
@@ -61,21 +67,31 @@ async def crear_alumno_route(
     return await crud.crear_alumno(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
 
 # Crear alumno / alumno existente
+@app.post("/alumnos/crear_inscripcion")
+async def crear_inscripcion_route(
+    alumno: schemas.Crear_Inscripcion,
+    nombre_instrumento: str,
+    nombre_profesor:str,
+    nombre_nivel: str,
+    db: AsyncSession = Depends(get_db)
+):
+    return await crud.crear_inscripcion(db, alumno, nombre_instrumento, nombre_profesor, nombre_nivel)
 
-# Actualizar datos de alumno
+
+# Actulizar alumno
 
 @app.put("/alumnos/update", response_model=schemas.AlumnoResponse)
 async def actualizar_alumno_route(
     alumno_nombre: str,
-    alumno_apellidos:str, 
-    alumno: schemas.ActualizarAlumno, 
+    alumno_apellidos: str,
+    alumno: schemas.ActualizarAlumno,
     db: AsyncSession = Depends(get_db)
 ):
     return await crud.actualizar_alumno(db, alumno_nombre, alumno_apellidos, alumno)
 
 # Get alumno por nombre y apellidos
 
-@app.get("/alumnos/get/{alumno_nombre}")
+@app.get("/alumnos/get/")
 async def ver_alumno_route(
     nombre: str, 
     apellido: str, 
@@ -85,7 +101,7 @@ async def ver_alumno_route(
 
 # Borrar alumno
 
-@app.delete("alumnos/borrar")
+@app.delete("/alumnos/delete/{alumno_nombre}/{alumno_apellidos}")
 async def borrar_alumno_route(
     alumno_nombre: str,
     alumno_apellidos: str,
@@ -103,7 +119,7 @@ async def crear_profesor_route(
     return await crud.crear_profesor(db, profesor)
 
 # Actualizar datos de profesor
-@app.put("profesores/update", response_model=schemas.ProfesorResponse)
+@app.put("/profesores/update")
 async def update_profesor_route(
     profesor_nombre: str,
     profesor: schemas.ActualizarProfesor,
@@ -113,16 +129,17 @@ async def update_profesor_route(
 
 # Borrar profesor
 
-@app.delete("/profesores/delete/{profesor_id}", response_model=schemas.Profesor)
+@app.delete("/profesores/delete/{profesor_name}", response_model=schemas.ProfesorDeleteResponse)
 async def borrar_profesor_route(
-    profesor_id: int,
+    profesor_name: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.borrar_profesor(db, profesor_id)
+    return await crud.borrar_profesor(db, profesor_name)
+
 
 # Get profesor por nombre
 
-@app.get("/profesores/nombre")
+@app.get("/profesores/get")
 async def buscar_profesor_route(
     nombre: str, 
     db: AsyncSession = Depends(get_db)
@@ -133,37 +150,37 @@ async def buscar_profesor_route(
 
 @app.put("/precios/update")
 async def actualizar_precios_route(
-    pack_id: int,
+    pack_name: str,
     pack: schemas.ActualizarPrecio,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_precios(db, pack_id, pack)
+    return await crud.actualizar_precios(db, pack_name, pack)
 
 # Actualizar descuentos
 
 @app.put("/descuentos/update")
 async def actualizar_descuentos_route(
-    descuento_id: int,
+    descuento_desc: str,
     descuento: schemas.ActualizarDescuento,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.actualizar_descuentos(db, descuento_id, descuento)
+    return await crud.actualizar_descuentos(db, descuento_desc, descuento)
 
 # Ver precios
 
 @app.get("/precios/get/")
 async def ver_precios_route(
-    pack_id: int,
+    pack: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_precios(db, pack_id)
+    return await crud.ver_precios(db, pack)
 
 @app.get("/descuentos/get/")
 async def ver_descuentos_route(
-    descuento_id: int,
+    descuento: str,
     db: AsyncSession = Depends(get_db)
 ):
-    return await crud.ver_descuentos(db, descuento_id)
+    return await crud.ver_descuentos(db, descuento)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
