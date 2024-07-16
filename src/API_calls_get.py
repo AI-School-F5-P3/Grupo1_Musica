@@ -1,7 +1,5 @@
 import requests
 import pandas as pd
-from pandas import json_normalize
-import numpy
 
 def flatten_json(data, prefix=''):
     result = {}

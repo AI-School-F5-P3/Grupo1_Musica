@@ -4,6 +4,7 @@ from GUI_screens import change_screen
 from API_calls_get import get_alumnos
 from API_calls_put import update_alumno
 from API_calls_delete import borrar_alumno
+from API_calls_post import create_alumno
 
 def screen_nuevo_alumno():
     trumpet = "\U0001f3ba"
@@ -13,9 +14,9 @@ def screen_nuevo_alumno():
 
     st.markdown("""<h2 style="text-align: center;">Nuevo registro de alumno</h2>""", unsafe_allow_html=True)
 
-    st.text_input("Nombre del alumno")
+    nombre = st.text_input("Nombre del alumno")
 
-    st.text_input("Apellidos del alumno")
+    apellidos = st.text_input("Apellidos del alumno")
 
     age = st.number_input("Edad del alumno", value = 6, min_value = 6, max_value = 100, step = 1)
 
@@ -23,7 +24,9 @@ def screen_nuevo_alumno():
 
     email = st.text_input("Correo electrónico")
 
-    familiy = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
+    family = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
+
+    family_bool = True if family == 'Si' else False
 
     instrumento = st.selectbox("Clase", options = ["Flauta", "Piano", "Guitarra", "Saxo", "Canto"])
     
@@ -66,8 +69,23 @@ def screen_nuevo_alumno():
 
     nivel = st.selectbox("Nivel: ", options = options)
 
-    enviar = st.button("Registrar", type = "primary")
+    data = {
+        "nombre": nombre,
+        "apellido": apellidos,
+        "edad": age,
+        "telefono": tfn_number,
+        "correo": email,
+        "familiar": family_bool,
+        "total_mes": 0
+    }
 
+    if st.button("Registro", type = "primary"):
+        result = create_alumno(instrumento, profesor, nivel, data)
+        if result:
+            st.success("Alumno registrado correctamente")
+        else:
+            st.error("Hubo un error registrando los datos.")
+    
     if st.button("Atras", type = "primary"):
         change_screen('screen_alumnos')
         st.rerun()
@@ -97,13 +115,15 @@ def screen_actualizar_alumno():
 
     family = st.selectbox(label = "¿Tiene un familiar inscrito en nuestro centro?", options = ["Si", "No"])
 
+    family_bool = True if family == 'Si' else False
+
     data = {
         "nombre": nuevo_nombre,
         "apellido": nuevos_apellidos,
         "edad": age,
         "telefono": tfn_number,
         "correo": email,
-        "familiar": True if family == "Si" else False,
+        "familiar": family_bool,
         "total_mes": 0
     }
 
