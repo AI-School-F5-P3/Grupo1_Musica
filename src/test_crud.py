@@ -57,7 +57,7 @@ async def test_crear_y_buscar_profesor(db):
 
 @pytest.mark.asyncio
 async def test_crear_multiple_profesores(db):
-    profesores = ["Ana Gómez", "Pedro Sánchez", "Lucía Fernández"]
+    profesores = ["Ana Gómez", "Emilio Sánchez", "Lucía Fernández"]
     for nombre in profesores:
         profesor_data = schemas.ProfesorCreate(profesor=nombre)
         await crud.crear_profesor(db, profesor_data)
@@ -77,10 +77,10 @@ async def crear_entidades_necesarias(db):
 # Tests para Alumnos
 @pytest.mark.asyncio
 async def test_ver_alumno_existente(db):
-    alumno = models.Alumno(nombre="Pedro", apellido="Sánchez")
+    alumno = models.Alumno(nombre="Emilio", apellido="Sánchez")
     db.add(alumno)
     await db.commit()
 
-    alumno_visto = await crud.ver_alumno(db, "Pedro", "Sánchez")
-    assert alumno_visto.nombre == "Pedro"
+    alumno_visto = await crud.ver_alumno(db, "Emilio", "Sánchez")
+    assert alumno_visto.nombre == "Emilio"
     assert alumno_visto.apellido == "Sánchez"
