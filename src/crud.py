@@ -228,26 +228,69 @@ async def borrar_alumno(
             await db.rollback()
             raise HTTPException(status_code=500, detail=f"No se pudo borrar al alumno: {str(e)}")
     
-        return schemas.AlumnoResponse.from_orm(alumno)
+        return schemas.AlumnoResponse(alumno)
 
 # Crear profesores
 
 async def crear_profesor(
     db: AsyncSession,
     profesor: schemas.ProfesorCreate
-) -> models.Profesor:
-    nuevo_profesor = models.Profesor(profesor=profesor.profesor)
-    db.add(nuevo_profesor)
-
+) -> schemas.ProfesorResponse:
     try:
+        # Verificar que no exista el profesor
+        query_profesor = select(models.Profesor).where(models.Profesor.profesor == profesor.profesor)
+        result = await db.execute(query_profesor)
+        profesor_existente = result.scalar_one_or_none()
+
+        if profesor_existente:
+            raise HTTPException(status_code=400, detail="El profesor ya existe")
+
+        # Crear el nuevo profesor
+        nuevo_profesor = models.Profesor(profesor=profesor.profesor)
+        db.add(nuevo_profesor)
         await db.commit()
         await db.refresh(nuevo_profesor)
-    except SQLAlchemyError:
-        await db.rollback()
-        raise HTTPException(status_code=500, detail="No se pudo crear profesor nuevo")
-    
-    return nuevo_profesor
 
+        # Lista de instrumentos
+        instrumentos = [
+            profesor.instrumento1,
+            profesor.instrumento2,
+            profesor.instrumento3,
+            profesor.instrumento4,
+            profesor.instrumento5
+        ]
+
+        # Crear los registros de profesor_instrumento
+        for instrumento in instrumentos:
+            if instrumento:
+                query_instrumento = select(models.Instrumento).where(models.Instrumento.instrumento == instrumento)
+                result = await db.execute(query_instrumento)
+                instrumento_obj = result.scalar_one()
+
+                nuevo_instrumento = models.Profesor_Instrumento(
+                    profesor_id=nuevo_profesor.id,
+                    instrumento_id=instrumento_obj.id
+                )
+                db.add(nuevo_instrumento)
+
+        await db.commit()
+
+        # Recargar el profesor después de la transacción
+        await db.refresh(nuevo_profesor)
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al crear profesor: {str(e)}")
+
+    return schemas.ProfesorResponse(
+        id=nuevo_profesor.id,
+        profesor=nuevo_profesor.profesor,
+        instrumento1=profesor.instrumento1,
+        instrumento2=profesor.instrumento2,
+        instrumento3=profesor.instrumento3,
+        instrumento4=profesor.instrumento4,
+        instrumento5=profesor.instrumento5
+    )
 # Actualizar profesor
 
 async def update_profesor(
@@ -307,6 +350,7 @@ async def buscar_profesor(
 
 # Borrar un profesor
 
+
 async def borrar_profesor(
     db: AsyncSession, 
     profesor_name: str
@@ -326,8 +370,7 @@ async def borrar_profesor(
             await db.rollback()
             raise HTTPException(status_code=500, detail="No se pudo borrar el profesor")
     
-        return profesor
-
+        return {"mensaje": "Exito"}
 # Actualizar precios
 
 async def actualizar_precios(

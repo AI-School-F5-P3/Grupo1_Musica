@@ -3,12 +3,32 @@ from typing import List, Optional
 
 class ProfesorCreate(BaseModel):
     profesor: str
+    instrumento1: str
+    instrumento2: Optional[str] = None
+    instrumento3: Optional[str] = None
+    instrumento4: Optional[str] = None
+    instrumento5: Optional[str] = None
 
-class ProfesorResponse(ProfesorCreate):
+class ProfesorResponse(BaseModel):
     id: int
+    profesor: str
+    instrumento1: str
+    instrumento2: Optional[str] = None
+    instrumento3: Optional[str] = None
+    instrumento4: Optional[str] = None
+    instrumento5: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+class ProfesorDelete(BaseModel):
+    profesor_name: str
+
+class ProfesorDeleteResponse(BaseModel):
+    profesor_name: str
+
+class ProfesorDeleteRequest(BaseModel):
+    profesor_name: str
+
+class ProfesorDeleteResponse(BaseModel):
+    mensaje: str
 
 class Crear_Alumno(BaseModel):
     nombre: str
@@ -77,3 +97,4 @@ class ActualizarPrecio(BaseModel):
 
 class ActualizarDescuento(BaseModel):
     porcentaje: Optional[float] = None
+
