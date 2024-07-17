@@ -22,7 +22,7 @@ En el siguiente enlace puede encontrar manuales más desarrollados en niveles us
 
 https://quasar-shark-5ea.notion.site/Documentaci-n-Escuela-de-m-sica-0c1a40ca41b240f59f93b58ce7cbc4f2
 
-###DEPRECADO AHORA ESTA TODO DOCKERIZADO PERO DEJAMOS LAS INSTRUCCIONES POR SI ALGUIEN QUIERE CONSTRUIRLO LOCAL (REQUIERE CAMBIAR CIERTAS RUTAS EN LOS SCRIPTS)
+### DEPRECADO AHORA ESTA TODO DOCKERIZADO PERO DEJAMOS LAS INSTRUCCIONES POR SI ALGUIEN QUIERE CONSTRUIRLO LOCAL (REQUIERE CAMBIAR CIERTAS RUTAS EN LOS SCRIPTS)
 
 Navegamos hasta el directorio principal y creamos un entorno virtual
 
