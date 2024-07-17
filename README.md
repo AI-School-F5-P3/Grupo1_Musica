@@ -6,10 +6,28 @@ Clonamos el repositorio
 
     git clone https://github.com/AI-School-F5-P3/Grupo1_Musica.git
 
-### Windows
+Antes de construir el docker se pueden modificar usuarios y contraseñas en streamlit/GUI.py y en las variables locales en los archivos .env.
+
+Con postgreSQL y docker-desktop instalados en el ordenador ejecutamos en la carpeta raiz de la app:
+
+    docker-compose up --build
+
+Una vez terminen de construirse los contenedores ya estará disponible la API, base de datos y GUI.
+ - Para acceder a la API: http://localhost:8000
+ - Para acceder a la interfaz gráfica Streamlit: http://localhost:8501
+     - Password: Admin
+     - Contraseña: 1234
+  
+En el siguiente enlace puede encontrar manuales más desarrollados en niveles usuario y técnico:
+
+https://quasar-shark-5ea.notion.site/Documentaci-n-Escuela-de-m-sica-0c1a40ca41b240f59f93b58ce7cbc4f2
+
+###DEPRECADO AHORA ESTA TODO DOCKERIZADO PERO DEJAMOS LAS INSTRUCCIONES POR SI ALGUIEN QUIERE CONSTRUIRLO LOCAL (REQUIERE CAMBIAR CIERTAS RUTAS EN LOS SCRIPTS)
 
 Navegamos hasta el directorio principal y creamos un entorno virtual
-    
+
+### Windows
+
     uv venv
 
 Lo activamos
@@ -51,7 +69,6 @@ Cuando esté conectada la base de datos, podemos lanzar la api ejecutando el scr
 
     streamlit run src/GUI.py
 
-
 ### macOS/Linux
 
 Instalacion para sistemas operativos macOS/linux
@@ -61,9 +78,6 @@ Ejecutar el script SQL:
     psql -U $DB_USER -d $DB_NAME -f db/init.sql
 
 
-En el siguiente enlace puede encontrar manuales más desarrollados en niveles usuario y técnico:
-
-https://quasar-shark-5ea.notion.site/Documentaci-n-Escuela-de-m-sica-0c1a40ca41b240f59f93b58ce7cbc4f2
 
 
 
