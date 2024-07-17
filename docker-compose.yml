@@ -1,0 +1,53 @@
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: armonia-db2
+    restart: always
+    env_file:
+      - .env  # Ruta al archivo .env relativa al directorio donde se encuentra el docker-compose.yml
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DB}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/mnt/data  # Volumen adicional para exportar archivos CSV
+    ports:
+      - "5433:5432"
+    networks:
+      - mynetwork
+
+  api:
+    build:
+      context: ./src
+      dockerfile: Dockerfile  # Ruta al Dockerfile dentro del contexto ./src
+    container_name: fastapi-app
+    restart: always
+    env_file:
+      - .env  # Ruta al archivo .env relativa al directorio donde se encuentra el docker-compose.yml
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - mynetwork
+
+  streamlit:
+    build:
+      context: ./streamlit
+      dockerfile: Dockerfile
+    container_name: streamlit-app
+    restart: always
+    ports:
+      - "8501:8501"
+    depends_on:
+     - api 
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

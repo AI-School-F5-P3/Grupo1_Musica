@@ -1,17 +1,23 @@
-# Usa la imagen base oficial de Python
-FROM python:3.8-slim
+# Imagen de python
+FROM python:3.12-slim
 
-# Establece el directorio de trabajo en /app
+# Directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos de requerimientos
-COPY requirements.txt .
+# Copiar archivos 
+COPY requirements.txt /app/requirements.txt
+COPY .env /app/.env
+COPY main.py /app/main.py
+COPY models.py /app/models.py
+COPY database.py /app/database.py
+COPY crud.py /app/crud.py
+COPY schemas.py /app/schemas.py
+COPY logger.py /app/logger.py
+# Instalar requirements
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Instala las dependencias de tu aplicación
-RUN pip install -r requirements.txt
+# Expone el puerto
+EXPOSE 8000
 
-# Copia todo el contenido de la carpeta actual al directorio /app en el contenedor
-COPY . .
-
-# Comando para ejecutar la aplicación con Uvicorn
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Compando de inicio
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

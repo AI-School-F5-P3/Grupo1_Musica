@@ -2,7 +2,7 @@ import requests
 from logger import logger
 
 def create_alumno(instrumento, profesor, nivel, data):
-    base_url = 'http://127.0.0.1:8000/alumnos/crear_nuevo'
+    base_url = 'http://api:8000/alumnos/crear_nuevo'
 
     # Construir la URL completa
     full_url = f'{base_url}?nombre_instrumento={instrumento}&nombre_profesor={profesor}&nombre_nivel={nivel}'
@@ -33,7 +33,7 @@ def create_alumno(instrumento, profesor, nivel, data):
         return False
     
 def create_inscripcion(nombre_instrumento, nombre_profesor, nombre_nivel, data):
-    base_url = 'http://127.0.0.1:8000'
+    base_url = 'http://api:8000'
     endpoint = '/alumnos/crear_inscripcion'
 
     # Construir la URL completa
@@ -69,7 +69,7 @@ def create_inscripcion(nombre_instrumento, nombre_profesor, nombre_nivel, data):
 
 
 def create_profesor(profesor, instrumento1, instrumento2=None, instrumento3=None, instrumento4=None, instrumento5=None):
-    base_url = 'http://127.0.0.1:8000/profesores/crear'
+    base_url = 'http://api:8000/profesores/crear'
     
     headers = {
         'Accept': 'application/json',

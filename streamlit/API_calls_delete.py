@@ -2,7 +2,7 @@ import requests
 from logger import logger
 
 def borrar_alumno(nombre, apellidos):
-    url = 'http://127.0.0.1:8000/alumnos/delete/{nombre}/{apellidos}'.format(
+    url = 'http://api:8000/alumnos/delete/{nombre}/{apellidos}'.format(
         nombre=nombre,
         apellidos=apellidos
     )
@@ -27,7 +27,7 @@ def borrar_alumno(nombre, apellidos):
     
 
 def borrar_profesor(nombre):
-    url = 'http://127.0.0.1:8000/profesores/delete/{nombre}'.format(
+    url = 'http://api:8000/profesores/delete/{nombre}'.format(
         nombre=nombre
     )
     headers = {

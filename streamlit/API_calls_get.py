@@ -16,7 +16,7 @@ def flatten_json(data, prefix=''):
     return result
 
 def get_alumnos(nombre, apellidos):
-    base_url = 'http://127.0.0.1:8000/alumnos/get/'
+    base_url = 'http://api:8000/alumnos/get/'
 
     # Nombre del alumno y parámetros adicionales
     params = {
@@ -50,7 +50,7 @@ def get_alumnos(nombre, apellidos):
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 def get_profesores(nombre):
-    base_url = 'http://127.0.0.1:8000/profesores/get'
+    base_url = 'http://api:8000/profesores/get'
 
     # Parámetros de la solicitud
     params = {
@@ -89,7 +89,7 @@ def get_profesores(nombre):
 
 
 def get_precios(pack):
-    base_url = 'http://127.0.0.1:8000/precios/get'
+    base_url = 'http://api:8000/precios/get'
     
     params = {
         'pack': pack
@@ -118,7 +118,7 @@ def get_precios(pack):
 
 
 def get_descuentos(descripcion):
-    base_url = 'http://127.0.0.1:8000/descuentos/get'
+    base_url = 'http://api:8000/descuentos/get'
 
     params = {
         'descuento': descripcion
@@ -144,7 +144,7 @@ def get_descuentos(descripcion):
 
 
 def get_all_alumnos():
-    base_url = 'http://127.0.0.1:8000/alumnos/all'
+    base_url = 'http://api:8000/alumnos/all'
 
     response = requests.get(base_url)
     if response.status_code == 200:
@@ -158,7 +158,7 @@ def get_all_alumnos():
 
 
 def get_all_profesores():
-    base_url = 'http://127.0.0.1:8000/profesores/all'
+    base_url = 'http://api:8000/profesores/all'
 
     response = requests.get(base_url)
     if response.status_code == 200:

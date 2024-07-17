@@ -2,7 +2,7 @@ import requests
 from logger import logger
 
 def update_alumno(nombre, apellidos, data):
-    url = 'http://127.0.0.1:8000/alumnos/update'
+    url = 'http://api:8000/alumnos/update'
 
     # Encabezados de la solicitud
     headers = {
@@ -26,7 +26,7 @@ def update_alumno(nombre, apellidos, data):
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 def update_profesor(nombre, data):
-    url = 'http://127.0.0.1:8000/profesores/update'
+    url = 'http://api:8000/profesores/update'
 
     full_url = f'{url}?profesor_nombre={nombre}'
 
@@ -51,7 +51,7 @@ def update_profesor(nombre, data):
 
 
 def update_precios(pack, data):
-    url = 'http://127.0.0.1:8000/precios/update'
+    url = 'http://api:8000/precios/update'
 
     full_url = f'{url}?pack_name={pack}'
 
@@ -75,7 +75,7 @@ def update_precios(pack, data):
         print(f'Error al hacer la solicitud: {response.status_code}')
 
 def update_descuentos(descripcion, data):
-    url = 'http://127.0.0.1:8000/descuentos/update'
+    url = 'http://api:8000/descuentos/update'
 
     full_url = f'{url}?descuento_desc={descripcion}'
 
