@@ -1,37 +1,37 @@
 clase,profesor,cantidad_alumnos,nombres_alumnos
-Bajo - Iniciación,Nayara,5,"Carlos, Pedro, Ana, Juan, Marta"
-Bajo - Medio,Nayara,5,"Sofía, Laura, Clara, Javier, Luis"
-Batería - Avanzado,Mar,5,"Pedro, Carlos, Ana, Juan, Marta"
-Batería - Iniciación,Mar,5,"Marta, Carlos, Ana, Juan, Pedro"
-Batería - Medio,Mar,5,"Luis, Clara, Javier, Sofía, Laura"
-Canto - Iniciación,Marifé,5,"Carlos, Pedro, Marta, Juan, Ana"
-Clarinete - Iniciación,Nieves,5,"Marta, Carlos, Ana, Juan, Pedro"
-Flauta - Iniciación,Mar,5,"Luis, Clara, Javier, Sofía, Laura"
-Flauta - Medio,Mar,5,"Pedro, Marta, Juan, Ana, Carlos"
-Guitarra - Iniciación,Flor,5,"Clara, Laura, Luis, Sofía, Javier"
-Guitarra - Iniciación,Mar,5,"Carlos, Pedro, Marta, Juan, Ana"
-Guitarra - Medio,Flor,5,"Clara, Laura, Luis, Sofía, Javier"
-Guitarra - Medio,Mar,5,"Ana, Pedro, Marta, Juan, Carlos"
-Percusión - Iniciación,Sofía,5,"Luis, Laura, Sofía, Javier, Clara"
-Piano - Avanzado,Álvaro,5,"Laura, Clara, Javier, Sofía, Luis"
-Piano - Avanzado,Flor,5,"Pedro, Marta, Juan, Ana, Carlos"
-Piano - Avanzado,Mar,0,
-Piano - Avanzado,Marifé,5,"Pedro, Marta, Juan, Ana, Carlos"
-Piano - Avanzado,Nayara,5,"Clara, Javier, Sofía, Luis, Laura"
-Piano - Cero,Álvaro,5,"Isabel, Mario, Natalia, Diego, Fernando"
-Piano - Cero,Flor,5,"Laura, Clara, Javier, Sofía, Luis"
-Piano - Cero,Mar,5,"Ana, Marta, Pedro, Carlos, Juan"
-Piano - Cero,Marifé,5,"Gabriela, Beatriz, Valeria, Hugo, Victor"
-Piano - Cero,Nayara,0,
-Piano - Iniciación,Álvaro,0,
-Piano - Iniciación,Flor,0,
-Piano - Iniciación,Mar,5,"Juan, Carlos, Pedro, Marta, Ana"
-Piano - Iniciación,Marifé,5,"Laura, Clara, Javier, Sofía, Luis"
-Piano - Iniciación,Nayara,0,
-Piano - Medio,Álvaro,5,"Marta, Pedro, Juan, Ana, Carlos"
-Piano - Medio,Flor,5,"Laura, Clara, Javier, Sofía, Luis"
-Piano - Medio,Mar,5,"Juan, Ana, Carlos, Pedro, Marta"
-Piano - Medio,Marifé,0,
-Piano - Medio,Nayara,5,"Laura, Luis, Sofía, Javier, Clara"
-Saxofón - Iniciación,Nieves,5,"Sofía, Laura, Clara, Javier, Luis"
-Violín - Iniciación,Nayara,5,"Javier, Clara, Laura, Luis, Sofía"
+Bajo - Iniciación,Nayara,1,Laura
+Bajo - Medio,Nayara,1,Beatriz
+Batería - Avanzado,Mar,1,Natalia
+Batería - Iniciación,Mar,1,Javier
+Batería - Medio,Mar,1,Mario
+Canto - Iniciación,Marifé,1,Clara
+Clarinete - Iniciación,Nieves,1,Valeria
+Flauta - Iniciación,Mar,1,Isabel
+Flauta - Medio,Mar,1,Sofía
+Guitarra - Iniciación,Flor,1,Pedro
+Guitarra - Iniciación,Mar,1,Javier
+Guitarra - Medio,Flor,1,Marta
+Guitarra - Medio,Mar,1,Diego
+Percusión - Iniciación,Sofía,1,Isabel
+Piano - Avanzado,Álvaro,1,Pedro
+Piano - Avanzado,Flor,1,Luis
+Piano - Avanzado,Mar,1,Carlos
+Piano - Avanzado,Marifé,1,Marta
+Piano - Avanzado,Nayara,1,Mario
+Piano - Cero,Álvaro,2,"Clara, Valeria"
+Piano - Cero,Flor,1,Fernando
+Piano - Cero,Mar,2,"Natalia, Carlos"
+Piano - Cero,Marifé,1,Victor
+Piano - Cero,Nayara,1,Laura
+Piano - Iniciación,Álvaro,1,Juan
+Piano - Iniciación,Flor,1,Beatriz
+Piano - Iniciación,Mar,2,"Victor, Gabriela"
+Piano - Iniciación,Marifé,1,Sofía
+Piano - Iniciación,Nayara,2,"Gabriela, Juan"
+Piano - Medio,Álvaro,1,Luis
+Piano - Medio,Flor,1,Hugo
+Piano - Medio,Mar,0,
+Piano - Medio,Marifé,2,"Ana, Hugo"
+Piano - Medio,Nayara,1,Diego
+Saxofón - Iniciación,Nieves,1,Ana
+Violín - Iniciación,Nayara,1,Fernando
