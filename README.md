@@ -22,11 +22,14 @@ Ejecutamos el siguiente comando para descargar las dependencias
 
 Configurar las variables de entorno en el archivo .env en el directorio raíz del proyecto (Grupo1_Musica):
 
-    DATABASE_URL=postgres://tu_usuario:tu_contraseña@localhost/nombre_basedatos
+    DATABASE_URL=postgresql+asyncpg://tu_usuario:tu_contraseña@localhost:5433/nombre_basedatos
+    DB_TYPE=postgresql+asyncpg
     DB_HOST=localhost
+    DB_PORT=5433
+    DB_DB=nombre_basedatos
+    DB_SCHEMA=nombre_schema
     DB_USER=tu_usuario
-    DB_PASS=tu_contraseña
-    DB_NAME=nombre_basedatos
+    DB_PASSWORD=tu_contraseña
     SECRET_KEY=password_server
     DEBUG=true
 
