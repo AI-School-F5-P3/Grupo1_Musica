@@ -1,0 +1,37 @@
+clase_id,instrumento_nivel,pack_id,nombre_pack,precio_clase
+1,Piano - Cero,2,"Piano, Guitarra, Batería y Flauta",35
+2,Piano - Cero,2,"Piano, Guitarra, Batería y Flauta",35
+3,Piano - Cero,2,"Piano, Guitarra, Batería y Flauta",35
+4,Piano - Cero,2,"Piano, Guitarra, Batería y Flauta",35
+5,Piano - Cero,2,"Piano, Guitarra, Batería y Flauta",35
+6,Piano - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+7,Piano - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+8,Piano - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+9,Piano - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+10,Piano - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+11,Piano - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+12,Piano - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+13,Piano - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+14,Piano - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+15,Piano - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+16,Piano - Avanzado,2,"Piano, Guitarra, Batería y Flauta",35
+17,Piano - Avanzado,2,"Piano, Guitarra, Batería y Flauta",35
+18,Piano - Avanzado,2,"Piano, Guitarra, Batería y Flauta",35
+19,Piano - Avanzado,2,"Piano, Guitarra, Batería y Flauta",35
+20,Piano - Avanzado,2,"Piano, Guitarra, Batería y Flauta",35
+21,Guitarra - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+22,Guitarra - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+23,Guitarra - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+24,Guitarra - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+25,Batería - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+26,Batería - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+27,Batería - Avanzado,2,"Piano, Guitarra, Batería y Flauta",35
+28,Violín - Iniciación,3,Violín y Bajo,40
+29,Canto - Iniciación,1,"Canto, Percusión",40
+30,Flauta - Iniciación,2,"Piano, Guitarra, Batería y Flauta",35
+31,Flauta - Medio,2,"Piano, Guitarra, Batería y Flauta",35
+32,Saxofón - Iniciación,4,Clarinete y Saxofón,40
+33,Clarinete - Iniciación,4,Clarinete y Saxofón,40
+34,Percusión - Iniciación,1,"Canto, Percusión",40
+35,Bajo - Iniciación,3,Violín y Bajo,40
+36,Bajo - Medio,3,Violín y Bajo,40
