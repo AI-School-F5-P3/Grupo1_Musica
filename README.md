@@ -24,6 +24,11 @@ https://quasar-shark-5ea.notion.site/Documentaci-n-Escuela-de-m-sica-0c1a40ca41b
 
 ### DEPRECADO AHORA ESTA TODO DOCKERIZADO PERO DEJAMOS LAS INSTRUCCIONES POR SI ALGUIEN QUIERE CONSTRUIRLO LOCAL (REQUIERE CAMBIAR CIERTAS RUTAS EN LOS SCRIPTS)
 
+(Las rutas a cambiar son:
+- En las API_Calls de la GUI cambiar en la url api por 127.0.0.1
+- En el archivo database.py cambiar en la url @armonia-db2:5432 por @localhost:5433
+)
+
 Navegamos hasta el directorio principal y creamos un entorno virtual
 
 ### Windows
