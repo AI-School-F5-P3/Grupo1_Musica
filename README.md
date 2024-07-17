@@ -63,7 +63,7 @@ Ejecutar el script SQL:
 
 En el siguiente enlace puede encontrar manuales más desarrollados en niveles usuario y técnico:
 
-https://www.notion.so/Documentaci-n-t-cnica-034d5128bd774d93920bdf9e20858a05
+https://quasar-shark-5ea.notion.site/Documentaci-n-Escuela-de-m-sica-0c1a40ca41b240f59f93b58ce7cbc4f2
 
 
 
