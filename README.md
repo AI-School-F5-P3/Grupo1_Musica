@@ -59,3 +59,12 @@ Instalacion para sistemas operativos macOS/linux
 Ejecutar el script SQL:
 
     psql -U $DB_USER -d $DB_NAME -f db/init.sql
+
+
+En el siguiente enlace puede encontrar manuales más desarrollados en niveles usuario y técnico:
+
+https://www.notion.so/Documentaci-n-t-cnica-034d5128bd774d93920bdf9e20858a05
+
+
+
+
