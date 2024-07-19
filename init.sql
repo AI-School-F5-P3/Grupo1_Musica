@@ -177,7 +177,7 @@ CREATE TABLE armonia.inscripcion(
     CONSTRAINT fk_alumno_id FOREIGN KEY (alumno_id) REFERENCES armonia.alumno("id"),
     CONSTRAINT fk_clase_id FOREIGN KEY (clase_id) REFERENCES armonia.clase("id"),
     CONSTRAINT fk_descuento_id FOREIGN KEY (descuento_id) REFERENCES armonia.descuento("id"),
-    CONSTRAINT chk_no_descuento_1 CHECK (descuento_id <> 1)
+    CONSTRAINT chk_no_descuento_1 CHECK (descuento_id <> 0)
 );
 
 -- Comentarios sobre la tabla inscripcion y sus columnas

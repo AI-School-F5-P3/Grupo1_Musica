@@ -104,7 +104,7 @@ def screen_nueva_inscripcion():
     nombre = st.text_input("Nombre del alumno")
     apellido = st.text_input("Apellido del alumno")
 
-    instrumento = st.selectbox("Instrumento", options=["Flauta", "Piano", "Guitarra", "Saxofón", "Canto"])
+    instrumento = st.selectbox("Instrumento", options=["Piano", "Guitarra", "Batería", "Violín", "Canto", "Flauta", "Saxofón", "Clarinete", "Percusión", "Bajo"])
     
     if instrumento == 'Piano':
         options = ["Mar", "Flor", "Álvaro", "Marifé", "Nayara"]
@@ -149,8 +149,6 @@ def screen_nueva_inscripcion():
             "nombre": nombre,
             "apellido": apellido
         }
-        if st.button("Mostrar datos", type = "primary"):
-            st.write(data)
 
         if st.button("Registrar", type="primary"):
             result = create_inscripcion(instrumento, profesor, nivel, data)

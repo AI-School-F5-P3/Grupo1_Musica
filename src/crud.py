@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound, MultipleResultsFound
 from sqlalchemy.orm import joinedload
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from datetime import date
 from fastapi import HTTPException
 from logger import logger
@@ -28,8 +28,6 @@ async def crear_alumno(
         if not instrumento:
             logger.error("No se encuentra el instrumento en la base de datos")
             raise HTTPException(status_code=404, detail="Instrumento no encontrado")
-
-            
 
         # Verificar que exista el profesor en la tabla profesor
         query_profesor = select(models.Profesor).where(models.Profesor.profesor == nombre_profesor)
@@ -92,6 +90,32 @@ async def crear_alumno(
         if not clase:
             logger.error("No se encuentra la clase de nivel e instrumento")
             raise HTTPException(status_code=404, detail="Clase no encontrada")
+        
+        # Obtener el ID del descuento
+
+        if alumno.familiar == True:
+            query_descuento = select(models.Descuento).where(models.Descuento.descripcion == 'Familiar en la escuela')
+        else:
+            query_descuento = select(models.Descuento).where(models.Descuento.descripcion == 'Sin descuento')
+
+        descuento_result = await db.execute(query_descuento)
+        descuento = descuento_result.scalar_one_or_none() 
+
+        if not descuento:
+            logger.error("No se encuentra el descuento")
+            raise HTTPException(status_code=500, detail="No se encontró el descuento en la base de datos")
+
+        # Obtener el precio del pack
+
+        query_pack = select(models.Pack).where(models.Pack.id == instrumento.pack_id)
+        pack_result = await db.execute(query_pack)
+        pack_precio = pack_result.scalar_one_or_none()
+
+        if not pack_precio:
+            logger.error('No se encuentra el pack de instrumento')
+            raise HTTPException(status_code=500, detail='No se encontró el pack de instrumentos')
+
+        total_mes_descuento = pack_precio.precio - (pack_precio.precio*(descuento.porcentaje/100))
 
     except SQLAlchemyError as e:
         await db.rollback()
@@ -106,28 +130,19 @@ async def crear_alumno(
             telefono=alumno.telefono,
             correo=alumno.correo,
             familiar=alumno.familiar,
-            total_mes=alumno.total_mes
+            total_mes= total_mes_descuento
         )
 
         db.add(nuevo_alumno)
         logger.info("Se añade un nuevo alumno a la tabla")
         await db.flush()  # Esto asegura que nuevo_alumno obtenga un ID antes de usarlo en la inscripción
 
-        # Obtener el ID del descuento "Sin descuento"
-        query_descuento = select(models.Descuento).where(models.Descuento.descripcion == 'Sin descuento')
-        descuento_result = await db.execute(query_descuento)
-        descuento = descuento_result.scalar_one_or_none()
-
-        if not descuento:
-            logger.error("No se encuentra el descuento 4")
-            raise HTTPException(status_code=500, detail="No se encontró el descuento 'Sin descuento' en la base de datos")
-
         alumno_inscripcion = models.Inscripcion(
             alumno_id=nuevo_alumno.id,
             clase_id=clase.id,
             fecha_inicio=date.today(),
             fecha_fin=None,
-            descuento_id=descuento.id  # Asignar el ID del descuento "Sin descuento"
+            descuento_id=descuento.id  # Asignar el ID del descuento 
         )
 
         db.add(alumno_inscripcion)
@@ -243,14 +258,59 @@ async def crear_inscripcion(
             logger.error("No se encuentra el alumno")
             raise HTTPException(status_code=404, detail="Alumno no encontrado")
         
-        #Verificar descuento
-        query_descuento = select(models.Descuento).where(models.Descuento.descripcion == 'Sin descuento')
+        #Verificar pack
+        query_pack = select(models.Pack).where(models.Pack.id == instrumento.pack_id)
+        pack_result = await db.execute(query_pack)
+        pack = pack_result.scalar_one_or_none()
+
+        if not pack:
+            logger.error('No se encuentra el pack de instrumento')
+            raise HTTPException(status_code = 500, detail = 'No se encontró el pack de instrumentos')
+
+        #Verificar pack existente
+        query_pack_existente = select(models.Inscripcion).options(
+            joinedload(models.Inscripcion.clase)
+            .joinedload(models.Clase.instrumento_nivel)
+            .joinedload(models.Instrumento_Nivel.instrumento)
+        ).filter(
+            models.Inscripcion.alumno_id == alumno.id
+        )
+        pack_existente_result = await db.execute(query_pack_existente)
+        inscripciones_previas = pack_existente_result.scalars().all()
+
+       # Extraer los IDs de instrumento_nivel_id de inscripciones_previas
+        instrumento_nivel_ids = {inscripcion.clase.instrumento_nivel_id for inscripcion in inscripciones_previas}
+
+        # Contar las inscripciones existentes
+        count_query = select(func.count()).where(
+            and_(
+                models.Inscripcion.alumno_id == alumno.id,
+                models.Clase.instrumento_nivel_id.in_(instrumento_nivel_ids)
+            )
+        )
+        count_result = await db.execute(count_query)
+        inscripciones_count = count_result.scalar()
+
+        if inscripciones_count == 1:
+            descuento_desc = 'Segundo curso del mismo instrumento'
+        elif inscripciones_count >= 2:
+            descuento_desc = 'Tercer curso del mismo instrumento'
+        else:
+            if alumno.familiar:
+                descuento_desc = 'Familiar en la escuela'
+            else:
+                descuento_desc = 'Sin descuento'
+
+        query_descuento = select(models.Descuento).where(models.Descuento.descripcion == descuento_desc)
         descuento_result = await db.execute(query_descuento)
         descuento = descuento_result.scalar_one_or_none()
 
+        precio_nueva_clase = pack.precio - (pack.precio*(descuento.porcentaje/100))
+        precio_nuevo = alumno.total_mes + precio_nueva_clase
+
         if not descuento:
             logger.error("No se encuentra el descuento 4")
-            raise HTTPException(status_code=500, detail="No se encontró el descuento 'Sin descuento' en la base de datos")
+            raise HTTPException(status_code=500, detail="No se encontró el descuento en la base de datos")
 
     except SQLAlchemyError as e:
         await db.rollback()
@@ -262,7 +322,7 @@ async def crear_inscripcion(
             clase_id=clase.id,
             fecha_inicio=date.today(),
             fecha_fin=None,
-            descuento_id=descuento.id  # Asignar el ID del descuento "Sin descuento"
+            descuento_id=descuento.id  # Asignar el ID del descuento
         )
 
         db.add(alumno_inscripcion)
@@ -274,6 +334,18 @@ async def crear_inscripcion(
         await db.rollback()
         logger.error("No se pudo crear el alumno nuevo")
         raise HTTPException(status_code=500, detail=f"No se pudo crear alumno nuevo: {str(e)}")
+    
+    try:
+        # Actualizar el precio del mes del alumno
+        alumno.total_mes = precio_nuevo
+        db.add(alumno)
+        await db.commit()
+        await db.refresh(alumno)
+
+    except SQLAlchemyError as e:
+        await db.rollback()
+        logger.error("No se pudo actualizar el precio del mes del alumno")
+        raise HTTPException(status_code=500, detail=f"No se pudo actualizar el precio del mes del alumno: {str(e)}")
 
     return {"mensaje":"exito"}
 
