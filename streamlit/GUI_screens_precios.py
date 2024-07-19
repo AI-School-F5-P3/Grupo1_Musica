@@ -16,7 +16,7 @@ def screen_actualizar_precios():
     data = {
         "precio": precio
     }
-    if st.button('Actualizar', type = "primary"):
+    if st.button('Actualizar'):
         result = update_precios(pack, data)
         if result:
             st.success("Datos actualizados correctamente")
@@ -24,7 +24,7 @@ def screen_actualizar_precios():
         else:
             st.error("Hubo un error actualizando los datos.")
             logger.error(f'Error actualizando precios de {pack} a través de Streamlit')
-    if st.button('Atrás', type = "primary"):
+    if st.button('Atrás'):
         change_screen('screen_precios')
         st.rerun()
 
@@ -39,7 +39,7 @@ def screen_actualizar_descuentos():
     data = {
         "porcentaje": porcentaje
     }
-    if st.button('Actualizar', type = "primary"):
+    if st.button('Actualizar'):
         result = update_descuentos(descripcion, data)
         if result:
             st.success("Datos actualizados correctamente")
@@ -47,7 +47,7 @@ def screen_actualizar_descuentos():
         else:
             st.error("Hubo un error actualizando los datos.")
             logger.error(f'Error actualizando descuentos de {descripcion} a través de Streamlit')
-    if st.button('Atrás', type = "primary"):
+    if st.button('Atrás'):
         change_screen('screen_precios')
         st.rerun()
 
@@ -66,7 +66,7 @@ def screen_consultar_precios():
         data, df = get_precios(id_pack)
         logger.info(f'Obtenidos datos de precios {id_pack} en JSON a través de Streamlit')
         st.write(data)
-    if st.button('Atrás', type = "primary"):
+    if st.button('Atrás'):
         change_screen('screen_precios')
         st.rerun()
     
@@ -85,6 +85,6 @@ def screen_consultar_descuentos():
         logger.info(f'Obtenidos datos de Descuentos {id_descuentos} en JSON a través de Streamlit')
         data, df = get_descuentos(id_descuentos)
         st.write(data)
-    if st.button('Atrás', type = "primary"):
+    if st.button('Atrás'):
         change_screen('screen_precios')
         st.rerun()

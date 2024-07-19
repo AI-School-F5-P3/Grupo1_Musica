@@ -7,6 +7,10 @@ from API_calls_delete import borrar_profesor
 from API_calls_post import create_profesor
 from logger import logger
 
+def validate_data(data):
+    missing_fields = [field for field, value in data.items() if not value]
+    return missing_fields
+
 def screen_nuevo_profesor():
     trumpet = "\U0001f3ba"
     sax = "\U0001f3b7"
@@ -45,16 +49,20 @@ def screen_nuevo_profesor():
     opciones5 = ["None"] + opciones5
     instrumento5 = st.selectbox("Clase 5", options=opciones5)
 
-    if st.button("Registro", type = "primary"):
-        result = create_profesor(nombre, instrumento1, instrumento2, instrumento3, instrumento4, instrumento5)
-        if result:
-            st.success("Profesor registrado correctamente")
-            logger.info(f'Profesor {nombre} registrado correctamente a través de Streamlit')
-        else:
-            st.error("Hubo un error registrando los datos.")
-            logger.error(f'Error registrando profesor {nombre} a través de Streamlit')
+    if nombre:
 
-    if st.button('Atrás', type = "primary"):
+        if st.button("Registro"):
+            result = create_profesor(nombre, instrumento1, instrumento2, instrumento3, instrumento4, instrumento5)
+            if result:
+                st.success("Profesor registrado correctamente")
+                logger.info(f'Profesor {nombre} registrado correctamente a través de Streamlit')
+            else:
+                st.error("Hubo un error registrando los datos.")
+                logger.error(f'Error registrando profesor {nombre} a través de Streamlit')
+    else:
+        st.warning("Por favor, ingrese el nombre del profesor")
+
+    if st.button('Atrás'):
         change_screen('screen_profesores')
         st.rerun()
 
@@ -74,17 +82,22 @@ def screen_actualizar_profesor():
         "profesor": nuevo_nombre
     }
 
-    if st.button('Actualizar', type = "primary"):
-        result = update_profesor(nombre, data)
-        if result:
-            st.success("Datos actualizados correctamente")
-            logger.info(f'Datos de Profesor {nombre} actualizados correctamente a través de Streamlit')
-        else:
-            st.error("Hubo un error actualizando los datos.")
-            logger.error(f'Error actualizando datos de profesor {nombre} a través de Streamlit')
+    if nombre:
             
-
-    if st.button('Atrás', type = "primary"):
+        if st.button('Actualizar', type = "primary"):
+            result = update_profesor(nombre, data)
+            if result:
+                st.success("Datos actualizados correctamente")
+                logger.info(f'Datos de Profesor {nombre} actualizados correctamente a través de Streamlit')
+            else:
+                st.error("Hubo un error actualizando los datos.")
+                logger.error(f'Error actualizando datos de profesor {nombre} a través de Streamlit')
+    
+    else:
+        
+        st.warning("Por favor, ingerese el nombre del profesor")
+                
+    if st.button('Atrás'):
         change_screen('screen_profesores')
         st.rerun()
 
@@ -96,17 +109,21 @@ def screen_borrar_profesor():
     st.markdown("""<h2 style="text-align: center;">Borrar registros de profesor</h2>""", unsafe_allow_html=True)
 
     nombre = st.text_input("Nombre del profesor")
+    
+    if nombre:
 
-    if st.button("DELETE", type = "primary"):
-        result = borrar_profesor(nombre)
-        if result:
-            st.success("Profesor eliminado correctamente")
-            logger.info(f'Profesor {nombre} eliminado correctamente a través de Streamlit')
-        else:
-            st.error("Hubo un error eliminando los datos")
-            logger.error(f'Error eliminando Profesor {nombre} a través de Streamlit')
+        if st.button("DELETE"):
+            result = borrar_profesor(nombre)
+            if result:
+                st.success("Profesor eliminado correctamente")
+                logger.info(f'Profesor {nombre} eliminado correctamente a través de Streamlit')
+            else:
+                st.error("Hubo un error eliminando los datos")
+                logger.error(f'Error eliminando Profesor {nombre} a través de Streamlit')
+    else:
+        st.warning('Por favor, ingrese el nombre del profesor')
 
-    if st.button('Atrás', type = "primary"):
+    if st.button('Atrás'):
         change_screen('screen_profesores')
         st.rerun()
 
@@ -119,17 +136,22 @@ def screen_get_profesor():
 
     nombre = st.text_input("Nombre del profesor")
 
-    if st.button("Get CSV", type = "primary"):
-        data, df = get_profesores(nombre)
-        logger.info(f'Obtenidos datos de Profesor {nombre} en CSV a través de Streamlit')
-        st.write(df)
-    
-    if st.button("Get JSON", type = "primary"):
-        data, df = get_profesores(nombre)
-        logger.info(f'Obtenidos datos de Profesor {nombre} en JSON a través de Streamlit')
-        st.write(data)
+    if nombre:
 
-    if st.button('Atrás', type = "primary"):
+        if st.button("Get CSV"):
+            data, df = get_profesores(nombre)
+            logger.info(f'Obtenidos datos de Profesor {nombre} en CSV a través de Streamlit')
+            st.write(df)
+        
+        if st.button("Get JSON"):
+            data, df = get_profesores(nombre)
+            logger.info(f'Obtenidos datos de Profesor {nombre} en JSON a través de Streamlit')
+            st.write(data)
+
+    else:
+        st.warning('Por favor, ingrese el nombre del profesor')
+
+    if st.button('Atrás'):
         change_screen('screen_profesores')
         st.rerun()
 
