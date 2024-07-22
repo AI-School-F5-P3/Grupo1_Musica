@@ -20,9 +20,9 @@ db_schema = os.getenv('DB_SCHEMA')
 db_user = os.getenv('DB_USER')
 db_pass = os.getenv('DB_PASSWORD')
 
-database_url = f"{db_type}://{db_user}:{db_pass}@armonia-db2:5432/{db_name}"
+database_url = f"{db_type}://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
-print(database_url)
+print(f"Data base URL: {database_url}")
 
 SQLALCHEMY_DB = database_url
 
