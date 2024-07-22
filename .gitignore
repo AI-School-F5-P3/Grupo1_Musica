@@ -1,30 +1,30 @@
 # Ignorar carpetas __pycache__
 __pycache__/
+
+# Ignorar archivos de bytecode de Python
+*.pyc
+*.pyo
+
+# Ignorar entornos virtuales
+venv/
+.venv/
+
+# Ignorar archivos y carpetas específicas de IDEs
+.vscode/
+.idea/
+
 # Ignorar archivos de registro
-logs/*.txt
-
-logs/
-
 *.log
+logs/*.txt
 
 # Ignorar el contenido de la carpeta logs, pero mantener la carpeta
 logs/*
 !logs/.gitkeep
 
-# Ignorar archivos de bytecode de Python
-*.pyc
-*.pyo
-# Ignorar entornos virtuales
-venv/
-.venv/
-# Ignorar archivos y carpetas específicas de IDEs
-.vscode/
-.idea/
+# Ignorar archivos y directorios de caché de pytest
+*.pytest_cache/
+.cache/
 
-Get-Content $envFilePath | ForEach-Object {
-    if ($_ -notmatch '^\s*#' -and $_ -match '^\s*(\w+)\s*=\s*(.*)\s*$') {
-        $name = $matches[1]
-        $value = $matches[2]
-        [System.Environment]::SetEnvironmentVariable($name, $value)
-    }
-}
+# Ignorar el contenido de la carpeta data, pero mantener la carpeta
+data/*
+!data/.gitkeep

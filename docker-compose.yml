@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DB}
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./initdb:/docker-entrypoint-initdb.d  # Montar el directorio con múltiples archivos SQL
       - ./data:/mnt/data  # Volumen adicional para exportar archivos CSV
     ports:
       - "5433:5432"
