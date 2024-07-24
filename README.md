@@ -68,7 +68,7 @@ Una vez el docker este configurado y funcionando, debemos conectar la base de da
 
 También puede usarse el comando (asumiendo que tenemos psql en las variables de entorno de nuestra máquina):
     
-    psql -h localhost -p 5433 -U postgres -a armonia
+    psql -h localhost -p 5433 -U admin_user -a armonia
 
 Cuando esté conectada la base de datos, podemos lanzar la api ejecutando el script 'main.py' dentro de /src/. Para inicar streamlit y disponer de una interfaz gráfica más amigable ejecutar el código:
 
